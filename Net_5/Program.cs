@@ -7,8 +7,8 @@ namespace Net_5
         static void Main(string[] args)
         {
             /*=====TYPE=====*/
-            Net_5.Attribute.TestAttribute.Test();
-
+            //Net_5.TestAttribute.TestAttribute.Test();
+            Net_5.Type.TestDynamic.Test();
             //Net_5.Type.Tuple.Test();
             //Net_5.Type.Anonyemous.Test();
             //Net_5.Nullable.TestNullable.Test();
