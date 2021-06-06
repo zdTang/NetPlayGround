@@ -8,7 +8,7 @@ namespace Net_5.Comparison
 {
     class EqualityComparison
     {
-
+        //本章定义.NET世界中，什么是相等，不同TYPE间如何比较
         public static void Test()
         {
             #region Comparison 比较两个值是否相同——VALUE TYPE REFERENCE TYPE
@@ -38,7 +38,7 @@ namespace Net_5.Comparison
                 Uri uri1 = new Uri("http://www.linqpad.net");
                 Uri uri2 = new Uri("http://www.linqpad.net");
                 Console.WriteLine(uri1 == uri2); // True
-                // 这个==被重写了，重写过程中又引用了uri的EQUALS方法（这个方法极其复杂，比较一些VALUE细节）
+                // 这个==被OVERLOAD了，重写过程中又引用了uri的EQUALS方法（这个方法极其复杂，比较一些VALUE细节）
 
                 #region == has been overriden [Source Code]
                 /*

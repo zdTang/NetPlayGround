@@ -21,7 +21,8 @@ namespace Net_5
             //Enumeration.TestEnumerable.Test();
             //Net_5.Enumeration.Iterator.Test();
 
-            Net_5.Comparison.EqualityComparison.Test();
+            //Net_5.Comparison.EqualityComparison.Test();
+            Net_5.Comparison.OrderComparison.Test();
             //TestTryCatch.Test();
             //TestLinq.Test();
             Console.WriteLine("Hello World!");
