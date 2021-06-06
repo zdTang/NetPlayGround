@@ -13,6 +13,7 @@ namespace Net_5
             //Net_5.Type.Tuple.Test();
             //Net_5.Type.Anonyemous.Test();
             //Net_5.Nullable.TestNullable.Test();
+            Net_5.Type.Utility.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
@@ -22,7 +23,7 @@ namespace Net_5
             //Net_5.Enumeration.Iterator.Test();
 
             //Net_5.Comparison.EqualityComparison.Test();
-            Net_5.Comparison.OrderComparison.Test();
+            //Net_5.Comparison.OrderComparison.Test();
             //TestTryCatch.Test();
             //TestLinq.Test();
             Console.WriteLine("Hello World!");
