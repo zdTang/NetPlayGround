@@ -13,7 +13,8 @@ namespace Net_5
             //Net_5.Type.Tuple.Test();
             //Net_5.Type.Anonyemous.Test();
             //Net_5.Nullable.TestNullable.Test();
-            Net_5.Type.Utility.Test();
+            //Net_5.Type.Utility.Test();
+            Net_5.Type.TestInterface.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
