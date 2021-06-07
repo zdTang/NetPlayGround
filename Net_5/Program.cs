@@ -14,7 +14,7 @@ namespace Net_5
             //Net_5.Type.Anonyemous.Test();
             //Net_5.Nullable.TestNullable.Test();
             //Net_5.Type.Utility.Test();
-            Net_5.Type.TestInterface.Test();
+            //Net_5.Type.TestInterface.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
@@ -22,6 +22,8 @@ namespace Net_5
             //Enumeration.ENumerationDrill.Test();
             //Enumeration.TestEnumerable.Test();
             //Net_5.Enumeration.Iterator.Test();
+            Net_5.Collection.TestArray.Test();
+         
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();

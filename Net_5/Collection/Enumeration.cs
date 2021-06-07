@@ -9,6 +9,7 @@ namespace Net_5.Collection
 {
     class Enumeration
     {
+        //示例了如何构建ENUMERATOR,或实施IENUMERABLE的几种方式
         public static void Test()
         {
             #region Low Level Enumeration, Non-Generic
@@ -73,11 +74,33 @@ namespace Net_5.Collection
 
             #endregion
 
-            #region Iterator Class
+            #region Iterator Class  // CLASS继承IEnumerable
 
             {
                 foreach (int element in new MyCollection())
                     Console.WriteLine(element);
+            }
+
+            #endregion
+
+            #region Iterator Method  //用METHOD返回Enumerator, 返回类型为IEnumerable<int>
+
+            {
+                foreach (int i in TestTwo.GetSomeIntegers())
+                    Console.WriteLine(i);
+            }
+
+            #endregion
+
+            #region 自己实现Enumerator的方法
+
+            {
+                // Non-Generic
+                foreach (int i in new MyIntList())
+                    Console.WriteLine(i);
+                // Generic
+                foreach (int i in new MyGenIntList())
+                    Console.WriteLine(i);
             }
 
             #endregion
@@ -115,7 +138,7 @@ namespace Net_5.Collection
         }
         // 必须显式实施父接口中的非GENERIC方法
         // 因为这个方法被子接口NEW了，因而只能显式实施
-        // 难道只要NEW了一个方法，被NEW的老方法必须显示实现？
+        // 难道只要NEW了一个方法，被NEW的老方法必须显示实现？ 是的！！
         IEnumerator IEnumerable.GetEnumerator()     // Explicit implementation
         {                                           // keeps it hidden.
             return GetEnumerator();
@@ -123,6 +146,8 @@ namespace Net_5.Collection
     }
 
     //我自己IMPLEMENT IENUMERATOR<T>
+    //它的DATA可以由上一层传入,用CONSTRUCTOR 构建
+    //但GENERIC CLASS不支持GENERIC CONSTRUCT??
     class DemoCollecton<T> : IEnumerator<T>
     {
         int[] data = { 1, 2, 3 };//这里不一定用框架的COLLECTION,如果有框加的COLLECTION,就不必多此一举，可直接调用计数器
@@ -146,6 +171,95 @@ namespace Net_5.Collection
         }
     }
 
+    public class TestTwo
+    {
+        // 返回一个实施了IEnumerable<int>接口的东西
+        public static IEnumerable<int> GetSomeIntegers()
+        {
+            yield return 1;
+            yield return 2;
+            yield return 3;
+        }
+    }
 
+    // OUTER COLLECTION自己实施ENUMERATOR-非GENERIC
+    // 通过建一个INNER CLASS(Enumerator)
+    public class MyIntList : IEnumerable
+    {
+        int[] data = { 1, 2, 3 };
+
+        public IEnumerator GetEnumerator() => new Enumerator(this);  //这里，把OUTER COLLECTION把自己的实例传了进去
+
+        //在自己内部定义Enumerator
+        class Enumerator : IEnumerator       // Define an inner class
+        {                                    // for the enumerator.
+            MyIntList collection;
+            int currentIndex = -1;
+
+            internal Enumerator(MyIntList collection)//INNER COLLECTION拿到OUTER COLLECTION
+            {
+                this.collection = collection;
+            }
+
+            public object Current  // 非GENERIC的CURRENT是OBJECT，与下面GENERIC的对比
+            {
+                get
+                {
+                    if (currentIndex == -1)
+                        throw new InvalidOperationException("Enumeration not started!");
+                    if (currentIndex == collection.data.Length) //使用OUTER COLLECTION中的DATA
+                        throw new InvalidOperationException("Past end of list!");
+                    return collection.data[currentIndex];
+                }
+            }
+
+            public bool MoveNext()
+            {
+                if (currentIndex >= collection.data.Length - 1) return false;
+                return ++currentIndex < collection.data.Length; //使用OUTER COLLECTION中的DATA
+            }
+
+            public void Reset() => currentIndex = -1;
+        }
+    }
+
+
+    // OUTER COLLECTION自己实施ENUMERATOR-GENERIC
+    // 通过建一个INNER CLASS(Enumerator)
+    class MyGenIntList : IEnumerable<int>
+    {
+        int[] data = { 1, 2, 3 };
+
+        // The generic enumerator is compatible with both IEnumerable and
+        // IEnumerable<T>. We implement the nongeneric GetEnumerator method
+        // explicitly to avoid a naming conflict.
+
+        public IEnumerator<int> GetEnumerator() => new Enumerator(this);
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
+        // Enumerator不是GENERIC的，接口是
+        // GENERIC CLASS没有带参的CONSTRUCOR
+        class Enumerator : IEnumerator<int>
+        {
+            int currentIndex = -1;
+            readonly MyGenIntList collection;
+
+            internal Enumerator(MyGenIntList collection)
+            {
+                this.collection = collection;
+            }
+
+            public int Current => collection.data[currentIndex]; // 非GENERIC的CURRENT是OBJECT
+            object IEnumerator.Current => Current; // 但也有一个显式实现的方法，是OBJECT的，注意这里的实现方式，OBJECT调用INT
+
+            public bool MoveNext() => ++currentIndex < collection.data.Length;
+
+            public void Reset() => currentIndex = -1;
+
+            // Given we don't need a Dispose method, it's good practice to
+            // implement it explicitly, so it's hidden from the public interface.
+
+            void IDisposable.Dispose() { }
+        }
+    }
 
 }

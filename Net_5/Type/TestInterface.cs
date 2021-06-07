@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,6 +62,11 @@ namespace Net_5.Type
             }
 
             #endregion
+        }
+        //在TWO中测试INTERFACE的继承
+        public static void TestTwo()
+        {
+
         }
     }
 
@@ -162,6 +168,27 @@ namespace Net_5.Type
         void IGrandpa.Undo()
         {
             Console.WriteLine("I Belong to grandPA--undo,");
+        }
+    }
+
+    interface IDemo<T> : IEnumerable<T>, IEnumerable
+    {
+
+    }
+    //https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/generics/generic-interfaces
+    //class Demo<T> : IDemo<T> // 如果接口不CLOSE,用个T表示，则这个CLASS必须也用T,因为要从CLASS中得知T的TYPE
+    class Demo : IDemo<int> // CLASS不必是范型的，此时的接口CLOSE,是INT型的
+                            // 如果CLASS不是GENERIC的，则接口也不是
+                            // 接口中的T必须来自前面CLASS或STRUCT的定义
+    {
+        public IEnumerator<int> GetEnumerator()//隐式实现
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()// 这个被GENERIC的NEW了，因而需要显式实现
+        {
+            throw new NotImplementedException();
         }
     }
 }
