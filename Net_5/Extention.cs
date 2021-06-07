@@ -35,6 +35,9 @@ namespace Net_5
                         Console.WriteLine((item ?? "null").ToString());
                     }
                     break;
+                case Boolean b:
+                    Console.WriteLine(b ? "true":"false");
+                    break;
                 default:
                     Console.WriteLine(o.ToString());
                     break;
