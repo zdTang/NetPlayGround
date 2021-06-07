@@ -22,8 +22,11 @@ namespace Net_5
             //Enumeration.ENumerationDrill.Test();
             //Enumeration.TestEnumerable.Test();
             //Net_5.Enumeration.Iterator.Test();
-            Net_5.Collection.TestArray.Test();
-         
+            //Net_5.Collection.TestArray.Test();
+            Net_5.Collection.ListSoOn.Test();
+
+           
+
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();
