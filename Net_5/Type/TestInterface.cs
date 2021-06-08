@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,10 +35,10 @@ namespace Net_5.Type
                 ob.Undo(1,2);
                 //子接口的实例调用方法
                 Decendent obb = new Decendent();
-                obb.Redo();//子接口改写父接口，NEW出来的
-                obb.Undo();//子接口改写父接口，NEW的
-                obb.Undo(1,2);//子接口新加的
-                obb.Undo(1);//父接口中的，父接口自己加的
+                obb.Redo();                         //子接口改写父接口，NEW出来的
+                obb.Undo();                         //子接口改写父接口，NEW的
+                obb.Undo(1,2);                  //子接口新加的
+                obb.Undo(1);                       //父接口中的，父接口自己加的
 
                 //实例戴上最底层接口（子接口），如同实例，可以拿到所有隐式，即默认方法，这是那个有返回值的REDO
                 ISon opp = new Decendent();
@@ -63,9 +64,24 @@ namespace Net_5.Type
 
             #endregion
         }
-        //在TWO中测试INTERFACE的继承
+        //在TWO中测试INTERFACE的显式和隐式两种继承
         public static void TestTwo()
         {
+            //见后面，DADTWO是显式实现接口，此时，要调用方法，必须有接口的帽子
+            DadTwo dad = new DadTwo();  // DADTWO是接口显式实现
+
+            /* 这里用实例竟然调不出一个方法  !!!!*/
+
+            //dad.                      
+
+            /*戴上接口就可以调用*/
+            IDad dad2 = new DadTwo();     //但调不出GRANDPA的方法
+            dad2.Redo();         //void
+           int a = dad2.Undo();         // return int
+            dad2.Undo(1);      // void
+            
+            IGrandpa dad3 = new DadTwo();
+            dad3.Undo();         // void
 
         }
     }
@@ -191,4 +207,57 @@ namespace Net_5.Type
             throw new NotImplementedException();
         }
     }
+
+    //隐式实现接口的例子
+    //除了被直接接口NEW掉的方法需要加一个老接口头，其它不用，实例可以直接调用
+    class Dad : IDad
+    {
+        public void Redo()  //0层接口
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Undo()//0层接口
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Undo(int a)//0层接口
+        {
+            throw new NotImplementedException();
+        }
+
+        void IGrandpa.Undo()//0层接口NEW掉的上层接口
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    //显式实现接口的情况，全部有接口头儿
+    class DadTwo : IDad
+    {
+        void IDad.Redo()
+        {
+            throw new NotImplementedException();
+        }
+
+        int IDad.Undo()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IDad.Undo(int a)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IGrandpa.Undo()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+
+
 }

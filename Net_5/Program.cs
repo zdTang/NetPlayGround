@@ -25,7 +25,10 @@ namespace Net_5
             //Net_5.Collection.TestArray.Test();
             //Net_5.Collection.ListSoOn.Test();
             //Net_5.Collection.CustomizableCollection.Test();
-            Net_5.Collection.CustomizableCollectionNew.Test();
+            //Net_5.Collection.CustomizableCollectionNew.Test();
+            //Net_5.Collection.ImmutableCollection.ImmutableCollection.Test();
+            Net_5.Collection.PluggingEqualityOrder.Test();
+            
 
 
 
