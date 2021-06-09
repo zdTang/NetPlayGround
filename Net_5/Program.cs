@@ -27,8 +27,8 @@ namespace Net_5
             //Net_5.Collection.CustomizableCollection.Test();
             //Net_5.Collection.CustomizableCollectionNew.Test();
             //Net_5.Collection.ImmutableCollection.ImmutableCollection.Test();
-            Net_5.Collection.PluggingEqualityOrder.Test();
-            
+            //Net_5.Collection.PluggingEqualityOrder.Test();
+
 
 
 
@@ -37,8 +37,8 @@ namespace Net_5
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();
             //TestTryCatch.Test();
-            //TestLinq.Test();
-            Console.WriteLine("Hello World!");
+            Net_5.Linq.TestLinq.Test();
+
             Console.WriteLine("Hello World!");
         }
     }

@@ -96,6 +96,15 @@ namespace Net_5.Type
         new int Undo();  //虽然返回值变化，但函数签名没变，这个需要NEW
         void Undo(int a); // 这个是父接口自己扩展的内容，有参数，签名动了，属于新方法，与爷爷接口无冲突
     }
+    // 测试OVERRIDE,不可以用在接口上
+    // OVERRIDE只是用在VIRTUAL 方法上
+    public interface IStepDad : IGrandpa
+    {
+        void Redo();
+        //override int Undo();  //OVERRIDE是不可以用在INTERFACE上的，只有NEW才可以
+                                //对于ABSTRACT元素，只可以OVERRIDE，而不可以NEW,这是为什么？
+        void Undo(int a); // 
+    }
 
     public interface ISon : IDad, IGrandpa
     {   //由于INTERFACE没有BODY,如果NEW之后,返回值类型不变，则没有任何意义，跟原来的一样

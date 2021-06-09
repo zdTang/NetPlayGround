@@ -97,11 +97,16 @@ namespace Net_5.Collection
             //另一类是COMPARER, 用于比较大小，用于SORT排序
             {
                 {
+                    var arr = Array.CreateInstance(typeof(int), 4);
+                    //Array CLASS中有IStructuralEquatable
                     int[] a1 = { 1, 2, 3 };
                     int[] a2 = { 1, 2, 3 };
                     IStructuralEquatable se1 = a1;
                     Console.WriteLine(a1.Equals(a2));                                  // False
                     Console.WriteLine(se1.Equals(a2, EqualityComparer<int>.Default));  // True
+                    //Console.WriteLine(a1.Equals(a2, EqualityComparer<int>.Default));  // 出错，ARRAY没有这一种EQUALS方法，这个IStructuralEquatable接口才有，要戴上接口帽子才能调用
+                    //a1.Equals();//但是ARRAY可以调用只带一个参数的EQUALS方法
+                    //也就是说，那个方法被OVERRIDE了，只能显式实现
                 }
                 {
                     string[] a1 = "the quick brown fox".Split();

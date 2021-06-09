@@ -31,6 +31,28 @@ namespace Net_5.Comparison
 
                 var result =f1.Equals(f2);      // 查看源码，发现OBJECT的EQUALS中用的是==判断，这个需要OVERRIDE才能对某一个CLASS适用
 
+                #region Object Equals SourceCode 
+                //在5.0源码中发现一个参数的EQUALS最后调用的也是这个STATIC 版
+                {
+                    // System.Object
+                    /*
+                     public static bool Equals(object? objA, object? objB)
+                    {
+                        if (objA == objB)
+                        {
+                            return true;
+                        }
+                        if (objA == null || objB == null)
+                        {
+                            return false;
+                        }
+                        return objA!.Equals(objB);
+                    }
+
+                   */
+                }
+
+                #endregion
                 Foo f3 = f1;
                 Console.WriteLine(f1 == f3);   // True (same objects)
 
@@ -96,7 +118,8 @@ namespace Net_5.Comparison
                 1, which applies value equality to the operands, returning true.
                 2, With reference types, Equals performs referential equality comparison by default;
                 3, with structs, Equals performs structural comparison by calling Equals on each of its fields
-
+                //这里是否可以理解，EQUALS本质上就是==，只是在RUNTIME时期根据TYPE类型而决定的==，RUNTIME时根据TYPE，调用TYPE它自已的==
+                //而不是象==在COMPILE时期就根据TYPE（很可能只是BOXING了一个帽子）绑定了==，这时很可能绑定的是错的。
                  *
                  */
 
@@ -162,6 +185,7 @@ namespace Net_5.Comparison
             #region Interface
 
             {
+                //看明白这个CLASS的写法
                 new TestNewOne<int>().IsEqual(3, 3);
             }
 
@@ -181,7 +205,10 @@ namespace Net_5.Comparison
                 Console.WriteLine(sb1 == sb2);          // False (referential equality)
                 Console.WriteLine(sb1.Equals(sb2));     // True  (value equality)
 
-                /* StringBuilder的EQUALS被重写，进行VALUE EQUALITY
+                #region StringBuilder的Equals被重写
+
+                {
+                    /* StringBuilder的EQUALS被重写，进行VALUE EQUALITY
                  public bool Equals(StringBuilder? sb)
                     {
                       if (sb == null || this.Length != sb.Length)
@@ -216,6 +243,10 @@ namespace Net_5.Comparison
                     }
                  *
                  */
+                }
+
+                #endregion
+
             }
 
             #endregion
@@ -228,6 +259,30 @@ namespace Net_5.Comparison
                 Area a2 = new Area(10, 5);
                 Console.WriteLine(a1.Equals(a2));    // True
                 Console.WriteLine(a1 == a2);          // True
+            }
+
+            #endregion
+
+            #region Test
+
+            {
+                var a = new Foo();
+                var b = new Foo();
+                (a == b).Dump("==");
+                object.Equals(a, b).Dump("Equals");
+               
+                // 实现了IEquatable<NewFoo>接口，注意看例子，实现接口与OBJECT的原EQUAL不冲突
+                var aa = new NewFoo();
+                var bb = new NewFoo();
+                (aa == bb).Dump("==");         //FALSE
+                aa.Equals(bb).Dump("Self Equals");  //TRUE  // NewFoo实现了IEquatable<NewFoo>接口
+                Object.Equals(aa, bb).Dump("Object static");      // fALSE
+               
+                // 用OBJECT的VISION去调
+                object aaa = new NewFoo();
+                object bbb = new NewFoo();
+                (aaa.Equals(bbb)).Dump("Use object's Vision");
+
             }
 
             #endregion
@@ -360,5 +415,23 @@ namespace Net_5.Comparison
         public static bool operator ==(Area a1, Area a2) => a1.Equals(a2);
 
         public static bool operator !=(Area a1, Area a2) => !a1.Equals(a2);
+    }
+    class NewFoo:IEquatable<NewFoo> { 
+        
+        public int X;
+        // 注意，这个新实现的方法与OBJECT的EQUAL没有冲突，这个没有OVERRIDE OBJECT'S EQUAL,参数TYPE不同，签名不同，不是一个东西
+        public bool Equals(NewFoo other)
+        {
+            return this.X == other.X;
+        }
+
+        //这样就是重写OBJECT的EQUALS了，可用OVERRIDE, NEW两种方式
+        //用OVERRIDE的话，GETHASHCODE也要重写
+        public override bool Equals(object other)  
+        {
+            //return this.X == other.X
+            return true;
+
+        }
     }
 }
