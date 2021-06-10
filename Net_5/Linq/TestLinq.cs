@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Net_5.Linq
 {
@@ -681,6 +682,20 @@ namespace Net_5.Linq
                     .Select((n, i) => "Pair " + i.ToString() + " = " + n)
                     .Dump();
             }
+            //Regex
+            {
+                Regex wordCounter = new Regex(@"\b(\w|[-'])+\b");
+
+                // The following query throws an exception, because Regex has no equivalent in SQL:
+
+               /*=================================
+                var query = dbContext.MedicalArticles
+                    .Where(article => article.Topic == "influenza"
+                                      && wordCounter.Matches(article.Abstract).Count < 100);
+
+                query.Dump();
+               ===================================*/
+            }
 
             #endregion
 
@@ -718,7 +733,8 @@ namespace Net_5.Linq
         //protected override void OnConfiguring(DbContextOptionsBuilder builder) => builder.
         protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.Entity<Customer>().ToTable("Customer").HasKey(c => c.ID);
     }
-
+    //这是个QUERY OPERATOR
+    //由YIELD RETURN 生成，仔细研究一下
     public static class MyExtensions
     {
         public static IEnumerable<string> Pair(this IEnumerable<string> source)
