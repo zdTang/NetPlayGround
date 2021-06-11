@@ -38,7 +38,9 @@ namespace Net_5
             //Net_5.Comparison.OrderComparison.Test();
             //TestTryCatch.Test();
             //Net_5.Linq.TestLinq.Test();
-            Net_5.Disposal.DisposalGarbageCollection.Test();
+            //Net_5.Disposal.DisposalGarbageCollection.Test();
+            //Net_5.Disposal.Template.Test(); TestDiagnostic
+            Net_5.Diagnostics.TestDiagnostic.Test();
 
             Console.WriteLine("Hello World!");
         }
