@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Net_5
 {
@@ -6,6 +7,12 @@ namespace Net_5
     {
         static void Main(string[] args)
         {
+            /*======加一个LOGGER====*/
+            Trace.Listeners.Clear();//CLEAR THE DEFAULT LISTENERS
+            var fileListener = new TextWriterTraceListener("D:\\trace.txt");
+            Trace.Listeners.Add(fileListener);
+
+
             /*=====TYPE=====*/
             //Net_5.TestAttribute.TestAttribute.Test();
             //Net_5.Type.TestDynamic.Test();
@@ -29,8 +36,8 @@ namespace Net_5
             //Net_5.Collection.ImmutableCollection.ImmutableCollection.Test();
             //Net_5.Collection.PluggingEqualityOrder.Test();
 
-
-
+            /*================Concurrency=================*/
+            Net_5.Concurrent.Multithreading.Test();
 
 
 
@@ -40,9 +47,12 @@ namespace Net_5
             //Net_5.Linq.TestLinq.Test();
             //Net_5.Disposal.DisposalGarbageCollection.Test();
             //Net_5.Disposal.Template.Test(); TestDiagnostic
-            Net_5.Diagnostics.TestDiagnostic.Test();
+            //Net_5.Diagnostics.TestDiagnostic.Test();
 
             Console.WriteLine("Hello World!");
+            /*====Write into log file=====*/
+            //fileListener.Flush();  //这个强制写入，冲掉CACHE.任何时候需要确保写入，用FLASH
+            //fileListener.Close();// close the LOG FILE Handler
         }
     }
 }
