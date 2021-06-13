@@ -93,13 +93,13 @@ namespace Net_5.Concurrent
             #region Asynchronous Functions to the rescue
 
             {
-                DisplayPrimeCountsAsync();
+                //DisplayPrimeCountsAsync();
 
 
-                Console.WriteLine("Time to sleep!");
-                Thread.Sleep(3000);
+                //Console.WriteLine("Time to sleep!");
+                //Thread.Sleep(3000);
 
-                Console.WriteLine("Time to go!");
+                //Console.WriteLine("Time to go!");
             }
 
             #endregion
