@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Net_5
 {
@@ -8,9 +10,9 @@ namespace Net_5
         static void Main(string[] args)
         {
             /*======加一个LOGGER====*/
-            Trace.Listeners.Clear();//CLEAR THE DEFAULT LISTENERS
-            var fileListener = new TextWriterTraceListener("D:\\trace.txt");
-            Trace.Listeners.Add(fileListener);
+            //Trace.Listeners.Clear();//CLEAR THE DEFAULT LISTENERS
+            //var fileListener = new TextWriterTraceListener("D:\\trace.txt");
+            //Trace.Listeners.Add(fileListener);
 
 
             /*=====TYPE=====*/
@@ -39,6 +41,8 @@ namespace Net_5
             /*================Concurrency=================*/
             // Net_5.Concurrent.Multithreading.Test();
             //Net_5.Concurrent.TestTask.Test();
+            // Net_5.Concurrent.TestAwaiter.Test();
+            Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
 
 
 
@@ -49,9 +53,9 @@ namespace Net_5
             //Net_5.Disposal.DisposalGarbageCollection.Test();
             //Net_5.Disposal.Template.Test(); TestDiagnostic
             //Net_5.Diagnostics.TestDiagnostic.Test();
-            Net_5.TryCatch.TestThrow.Test();
+            //Net_5.TryCatch.TestThrow.Test();
 
-             Console.WriteLine("Hello World!");
+            Console.WriteLine("Hello World!");
             /*====Write into log file=====*/
             //fileListener.Flush();  //这个强制写入，冲掉CACHE.任何时候需要确保写入，用FLASH
             //fileListener.Close();// close the LOG FILE Handler

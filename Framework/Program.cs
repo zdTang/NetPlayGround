@@ -10,6 +10,7 @@ namespace Framework
     {
         static void Main(string[] args)
         {
+            Concurrent.TestThread.Test();
         }
     }
 }
