@@ -45,20 +45,20 @@ namespace Net_5.Concurrent
             #region Join and Sleep
             //用谁的JOIN，就表示MAIN THREAD要等候它结束，才继续走
             {
-                //Thread t = new Thread(Go);
-                //t.Start();
-                //t.Join();                          //如果没有JOIN,则主THREAD会先走，有JOIN,它会执行完，再融入主线程
-                //                                     //JOIN不设时间，就是无限的等，一直等它结束，主THREAD才动
-                ////t.Join(TimeSpan.FromTicks(10)); //设置时间界限，这个时间太短，子线程没跑完，主线程不等了，就启动了
-                ////Console.WriteLine(t.Join(TimeSpan.FromTicks(10)));
-                ////Thread.Sleep(1000);             //由于主线程休息一会儿，这次子线程跑在前面了
-                //Console.WriteLine("Thread t has ended!");
+                Thread t = new Thread(Go);
+                t.Start();
+                t.Join();                          //如果没有JOIN,则主THREAD会先走，有JOIN,它会执行完，再融入主线程
+                                                   //JOIN不设时间，就是无限的等，一直等它结束，主THREAD才动
+                                                   //t.Join(TimeSpan.FromTicks(10)); //设置时间界限，这个时间太短，子线程没跑完，主线程不等了，就启动了
+                                                   //Console.WriteLine(t.Join(TimeSpan.FromTicks(10)));
+                                                   //Thread.Sleep(1000);             //由于主线程休息一会儿，这次子线程跑在前面了
+                Console.WriteLine("Thread t has ended!");//主线程要等T执行结束，才执行这一句
 
-                //void Go()
-                //{
-                //    for (int i = 0; i < 1000; i++) Console.Write("y");
-                //    Console.WriteLine("Go has ended!");
-                //}
+                void Go()
+                {
+                    for (int i = 0; i < 1000; i++) Console.Write("y");
+                    Console.WriteLine("Go has ended!");
+                }
             }
 
             #endregion
@@ -274,6 +274,25 @@ namespace Net_5.Concurrent
 
             #endregion
 
+            #region Basic Signal
+            {
+                //用于THREAD间互相通信 
+                var signal = new ManualResetEvent(false);
+
+                new Thread(() =>
+                {
+                    Console.WriteLine("Waiting for signal...");
+                    signal.WaitOne();   //一直等候SIGNAL
+                    signal.Dispose();   //RELEASE ALL RESOURCES
+                    Console.WriteLine("Got signal!");
+                }).Start();
+                
+                Console.WriteLine("main thread!");
+                Thread.Sleep(6000);
+                signal.Set();        // “Open” the signal
+            }
+            #endregion
+
 
 
 
@@ -323,5 +342,7 @@ namespace Net_5.Concurrent
             }
         }
     }
+
+    
 
 }
