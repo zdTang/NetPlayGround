@@ -20,42 +20,42 @@ namespace Net_5.Concurrent
                 #region Start Task
 
             {
-                //最简单的方法
-                Task.Run(() => Console.WriteLine("Foo"));
-                // Task.Run(() => { Thread.Sleep(2000); Console.WriteLine("Foo"); }); //TASK是BACKGROUND，如果MAIN THREAD走完，它就被忽视
-                //Console.WriteLine("main thread");
-                Console.ReadLine();
+                ////最简单的方法
+                //Task.Run(() => Console.WriteLine("Foo"));
+                //// Task.Run(() => { Thread.Sleep(2000); Console.WriteLine("Foo"); }); //TASK是BACKGROUND，如果MAIN THREAD走完，它就被忽视
+                ////Console.WriteLine("main thread");
+                //Console.ReadLine();
 
-                // 注意，这个<Result>表示TASK中的方法的返回值，而不是TASK的返回值，TASK是不可以直接返回的，必须包装成METHOD的形式
-                // 感觉还是用LAMBDA表达式传值最方便
-                // TASK一般要一个ACTION,或一个无参的FUNC
-                /* 如下，可见TASK中的方法一般是无参的
-                    public Task(Func<TResult> function);
-                    public Task(Func<TResult> function, CancellationToken cancellationToken);
-                    public Task(Func<TResult> function, TaskCreationOptions creationOptions);
-                    public Task(Func<object?, TResult> function, object? state,TaskCreationOptions creationOptions);这个FUNC可以带一个可以NULL的OBJECT,必须是OBJECT
+                //// 注意，这个<Result>表示TASK中的方法的返回值，而不是TASK的返回值，TASK是不可以直接返回的，必须包装成METHOD的形式
+                //// 感觉还是用LAMBDA表达式传值最方便
+                //// TASK一般要一个ACTION,或一个无参的FUNC
+                ///* 如下，可见TASK中的方法一般是无参的
+                //    public Task(Func<TResult> function);
+                //    public Task(Func<TResult> function, CancellationToken cancellationToken);
+                //    public Task(Func<TResult> function, TaskCreationOptions creationOptions);
+                //    public Task(Func<object?, TResult> function, object? state,TaskCreationOptions creationOptions);这个FUNC可以带一个可以NULL的OBJECT,必须是OBJECT
 
-                 */
-                Task<int> task = new Task<int>(() => { return 10; });
-                Task<string> taskTwo = new Task<string>(Demo);
-                Task<string>
-                    taskThree = new Task<string>(DemoTwo,
-                        new CancellationToken(false)); //用NEW实例的，如果带参数，则需要加一个CANCELLATIONTOKEN
+                // */
+                //Task<int> task = new Task<int>(() => { return 10; });
+                //Task<string> taskTwo = new Task<string>(Demo);
+                //Task<string>
+                //    taskThree = new Task<string>(DemoTwo,
+                //        new CancellationToken(false)); //用NEW实例的，如果带参数，则需要加一个CANCELLATIONTOKEN
+                ////注意， 这是异步调用，主线程CALL完之后，不等结果，直接返回，向下进行
+                //var taskFour = Task.Factory.StartNew(() => { });
+                //var taskFive = Task.Factory.StartNew((object str) => str.ToString(), true);
+                ////注意， 这是异步调用，主线程CALL完之后，不等结果，直接返回，向下进行
+                //Task<string> taskSix = Task.Run(() => "mike");
 
-                var taskFour = Task.Factory.StartNew(() => { });
-                var taskFive = Task.Factory.StartNew((object str) => str.ToString(), true);
+                //string Demo()
+                //{
+                //    return "Mike";
+                //}
 
-                Task<string> taskSix = Task.Run(() => "mike");
-
-                string Demo()
-                {
-                    return "Mike";
-                }
-
-                string DemoTwo(object obj)
-                {
-                    return obj.ToString();
-                }
+                //string DemoTwo(object obj)
+                //{
+                //    return obj.ToString();
+                //}
             }
             #endregion
 
@@ -370,41 +370,63 @@ namespace Net_5.Concurrent
                     //Thread.Sleep(6000);
                 }
 
-                #endregion
+            #endregion
 
-                #region Delay with TaskCompletionSource
+            #region Delay with TaskCompletionSource
 
-                //We could make this more useful and turn it into a general-purpose Delay
-                //method by parameterizing the delay time and getting rid of the return value.
+            //We could make this more useful and turn it into a general-purpose Delay
+            //method by parameterizing the delay time and getting rid of the return value.
+            //这里模拟的是不是异步的情况
+            //由于返回结果是TASK的，都是异步的，异步编程的三种返回结果：Task<TResult>、Task 和 void
+            //由于这个DELAY返回的是TASK,是个将来结果，因而直接返回CALLER
+            //这些DELAY自己执行，取得结果后，将结果放在TASK中（借助TaskCompletionSource），我们将来就可以获取了
+            //这里的TIMER.ELAPSED 模拟了事件通知机制，即I/O结束后，就把结果写入TASK中
 
+            {
+                //for (int i = 0; i < 10000; i++)
+                //    Delay(5000).GetAwaiter().OnCompleted(() => Console.WriteLine(42));
+
+                //Task Delay(int milliseconds)
+                //{
+                //    var tcs = new TaskCompletionSource<object>();
+                //    var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
+                //    timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(null); };
+                //    timer.Start();
+                //    return tcs.Task;
+                //}
+                //Console.WriteLine("Act please!");
+                //Thread.Sleep(6000);//主人要在这里等着
+            }
+            // 用上面例子模拟异步回调
+            {
+               
+                Task<int> delay=Delay(5000);
+
+                Task<int> Delay(int milliseconds)
                 {
-                    //for (int i = 0; i < 10000; i++)
-                    //    Delay(5000).GetAwaiter().OnCompleted(() => Console.WriteLine(42));
-
-                    //Task Delay(int milliseconds)
-                    //{
-                    //    var tcs = new TaskCompletionSource<object>();
-                    //    var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
-                    //    timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(null); };
-                    //    timer.Start();
-                    //    return tcs.Task;
-                    //}
-                    //Console.WriteLine("Act please!");
-                    //Thread.Sleep(6000);//主人要在这里等着
+                    var tcs = new TaskCompletionSource<int>();
+                    var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
+                    timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(100); };
+                    timer.Start();
+                    return tcs.Task;
                 }
+                Console.WriteLine("Act please!");
+                //var result = delay.GetAwaiter();
+                //Console.WriteLine(result.GetResult());
+                Console.WriteLine(delay.Result);
+            }
+            // Task Delay
+            // The Delay method that we just wrote is sufficiently useful that it’s
+            // available as a static method on the Task class
 
-                // Task Delay
-                // The Delay method that we just wrote is sufficiently useful that it’s
-                // available as a static method on the Task class
+            {
+                //Task.Delay(5000).GetAwaiter().OnCompleted(() => Console.WriteLine(42));
 
-                {
-                    //Task.Delay(5000).GetAwaiter().OnCompleted(() => Console.WriteLine(42));
+                //// Another way to attach a continuation:
+                //Task.Delay(5000).ContinueWith(ant => Console.WriteLine(42));
 
-                    //// Another way to attach a continuation:
-                    //Task.Delay(5000).ContinueWith(ant => Console.WriteLine(42));
-
-                    //Console.WriteLine("Act please!");
-                    //Thread.Sleep(6000);//主人要在这里等着
+                //Console.WriteLine("Act please!");
+                //Thread.Sleep(6000);//主人要在这里等着
                 }
                 // Value Task
                 //TODO: 执行顺序很混乱，没有结果，主线程没有执行最后两句，为什么？
