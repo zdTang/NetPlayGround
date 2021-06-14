@@ -17,10 +17,13 @@ namespace Net_5.Concurrent
     {
         public static void Test()
         {
-            //THREAD不能取得返回值？？？？
+
             //传参用LAMBDA EXPRESSON最好（）=>{}
             //用START()也可以传参
-            
+            //THREAD的问题
+            //THREAD不能取得返回值？？？--->可以通过共享字段，变量来获得
+            //THREAD不支持CONTINUATION,即一个动作结束，不能马上开始另一个动作
+            //这些问题可以通过TASK解决
             #region Creating a thread
             //任何一个程序在开始时，都只有一个THREAD
             //这里别开一个概念，单CORE与多CORE(多PROCESSOR),PARALLEL是指在多CORE或多PROCESSOR上，是真正的并行
