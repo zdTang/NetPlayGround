@@ -39,10 +39,10 @@ namespace Net_5
             //Net_5.Collection.PluggingEqualityOrder.Test();
 
             /*================Concurrency=================*/
-            // Net_5.Concurrent.Multithreading.Test();
+            Net_5.Concurrent.Multithreading.Test();
             //Net_5.Concurrent.TestTask.Test();
             // Net_5.Concurrent.TestAwaiter.Test();
-            Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
+            //Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
 
 
 
