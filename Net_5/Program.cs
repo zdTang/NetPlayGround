@@ -40,10 +40,11 @@ namespace Net_5
 
             /*================Concurrency=================*/
             //Net_5.Concurrent.Multithreading.Test();
-            Net_5.Concurrent.TestTask.Test();
-            // Net_5.Concurrent.TestAwaiter.Test();
+            //Net_5.Concurrent.TestTask.Test();
+            //Net_5.Concurrent.TestAwaiter.Test();
             //Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
-
+            Net_5.Concurrent.Asynchronous_Version_5.TestAsync();
+            //await Net_5.Concurrent.ch01_01.TestAsync();
 
 
             //Net_5.Comparison.EqualityComparison.Test();
@@ -54,11 +55,13 @@ namespace Net_5
             //Net_5.Disposal.Template.Test(); TestDiagnostic
             //Net_5.Diagnostics.TestDiagnostic.Test();
             //Net_5.TryCatch.TestThrow.Test();
-
             Console.WriteLine("Hello World!");
             /*====Write into log file=====*/
             //fileListener.Flush();  //这个强制写入，冲掉CACHE.任何时候需要确保写入，用FLASH
             //fileListener.Close();// close the LOG FILE Handler
         }
+
+
+
     }
 }

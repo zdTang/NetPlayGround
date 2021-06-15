@@ -15,6 +15,7 @@ namespace Net_5.Concurrent
 
             // TASK的参数都由FUNC,ACTION表示，好好理解意义
             // 感觉TASK传参也是用LAMBDA最方便  --- 
+            // 如果一个方法的回值是返 TASK<T>的，那么应该是异步的，即主线程不会等结果
             ////The Task class provides a powerful abstraction for threading with which you can easily distinguish between the degree of parallelization in an application (the tasks) and the units of parallelization (the threads). On a single-processor computer, these items are usually the same. However, on a computer with multiple processors or with a multicore processor, they are different. (C# SBS)这段说明了TASK 与 THREAD的区别
 
                 #region Start Task
@@ -143,41 +144,38 @@ namespace Net_5.Concurrent
                 //这是C#的异步回调模式？ C# asynchronous Function mode
 
                 {
-                    //Task<int> primeNumberTask = Task.Run(() =>
-                    //    Enumerable.Range(2, 3000000)
-                    //        .Count(n => Enumerable
-                    //        .Range(2, (int)Math.Sqrt(n) - 1)
-                    //        .All(i => n % i > 0)));
+                //Task<int> primeNumberTask = Task.Run(() =>
+                //    Enumerable.Range(2, 3000000)
+                //        .Count(n => Enumerable
+                //        .Range(2, (int)Math.Sqrt(n) - 1)
+                //        .All(i => n % i > 0)));
 
 
 
-                    ////will (in general) execute on the same thread as the antecedent, avoid‐ing unnecessary overhead.
-                    ////这里，这个AWAITER的设置方式，决定了这个CONTINUTAION是在哪个THREAD上执行
-                    ////下面两种方式
-                    ///*If a synchronization context is present, OnCompleted automatically captures it and posts the continuation to that context.
-                    //This is very useful in rich client applications because it bounces the continuation back to the UI thread
-                    //*/
-                    ////synchronization context 是个CLASS
-                    ////https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext?view=net-5.0
-                    ////https://docs.microsoft.com/en-us/archive/msdn-magazine/2011/february/msdn-magazine-parallel-computing-it-s-all-about-the-synchronizationcontext
-                    ////If no synchronization context is present—or you use ConfigureAwait(false)—the continuation will (in general) execute on the same thread as the antecedent, avoiding unnecessary overhead.
+                ////will (in general) execute on the same thread as the antecedent, avoid‐ing unnecessary overhead.
+                ////这里，这个AWAITER的设置方式，决定了这个CONTINUTAION是在哪个THREAD上执行
+                ////下面两种方式
+                ///*If a synchronization context is present, OnCompleted automatically captures it and posts the continuation to that context.
+                //This is very useful in rich client applications because it bounces the continuation back to the UI thread
+                //*/
+                ////synchronization context 是个CLASS
+                ////https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext?view=net-5.0
+                ////https://docs.microsoft.com/en-us/archive/msdn-magazine/2011/february/msdn-magazine-parallel-computing-it-s-all-about-the-synchronizationcontext
+                ////If no synchronization context is present—or you use ConfigureAwait(false)—the continuation will (in general) execute on the same thread as the antecedent, avoiding unnecessary overhead.
 
-                    ////var awaiter = primeNumberTask.GetAwaiter(); //continuation 被丢回 context,不见是还是执行刚才ANTECEDENT的那个THREAD
-                    //var awaiter = primeNumberTask.ConfigureAwait(false).GetAwaiter();   //same thread as the antecedent
+                ////var awaiter = primeNumberTask.GetAwaiter(); //continuation 被丢回 context,不见是还是执行刚才ANTECEDENT的那个THREAD
+                //var awaiter = primeNumberTask.ConfigureAwait(false).GetAwaiter();   //same thread as the antecedent
 
-
-
-
-                    //awaiter.OnCompleted(() =>
-                    //{
-                    //    int result = awaiter.GetResult();
-                    //    Console.WriteLine(result);       // Writes result
-                    //});
-                    //// Console.WriteLine(primeNumberTask.Result);  // MAIN THREAD WILL WAIT HERE
-                    //Console.WriteLine("bye");
-                    ////主线程要等在这里才行
-                    //Thread.Sleep(6000);
-                }
+                //awaiter.OnCompleted(() =>
+                //{
+                //    int result = awaiter.GetResult();
+                //    Console.WriteLine(result);       // Writes result
+                //    });
+                //// Console.WriteLine(primeNumberTask.Result);  // MAIN THREAD WILL WAIT HERE
+                //Console.WriteLine("bye");
+                ////主线程要等在这里才行
+                //Thread.Sleep(6000);
+            }
                 //不用AWAITER的方案，而直接用WAIT()的方案
                 {
                     //Task<int> primeNumberTask = Task.Run(() =>
@@ -372,11 +370,11 @@ namespace Net_5.Concurrent
 
             #endregion
 
-            #region Delay with TaskCompletionSource
+                #region Delay with TaskCompletionSource
 
             //We could make this more useful and turn it into a general-purpose Delay
             //method by parameterizing the delay time and getting rid of the return value.
-            //这里模拟的是不是异步的情况
+            //这里模拟的是不是异步的情况？
             //由于返回结果是TASK的，都是异步的，异步编程的三种返回结果：Task<TResult>、Task 和 void
             //由于这个DELAY返回的是TASK,是个将来结果，因而直接返回CALLER
             //这些DELAY自己执行，取得结果后，将结果放在TASK中（借助TaskCompletionSource），我们将来就可以获取了
@@ -397,23 +395,30 @@ namespace Net_5.Concurrent
                 //Console.WriteLine("Act please!");
                 //Thread.Sleep(6000);//主人要在这里等着
             }
-            // 用上面例子模拟异步回调
+            // 用上面例子模拟异步回调,P这个DELAY中并没有启动新的THREAD，也可以生成异步
+            // 这个TIMER可以模拟IO读写之类的操作，由OS线程去完成，需要一定的时间
+            // 当IO结束时，以EVENT或MESSAGE信息通知 TaskCompletionSource<int>
+            // TaskCompletionSource<int>将结果打包成TASK<INT>的形式返回
+            // 此时，如果在主线程中，我们要取这个结果，就可以拿到了，同时主线程根本没有等它，继续做别的事情了
+            // 这里面的坑是TASK<TRESULT>,这里需要加入返回值类型
             {
-               
-                Task<int> delay=Delay(5000);
 
-                Task<int> Delay(int milliseconds)
-                {
-                    var tcs = new TaskCompletionSource<int>();
-                    var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
-                    timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(100); };
-                    timer.Start();
-                    return tcs.Task;
-                }
-                Console.WriteLine("Act please!");
-                //var result = delay.GetAwaiter();
-                //Console.WriteLine(result.GetResult());
-                Console.WriteLine(delay.Result);
+                //Task<int> delay = Delay(5000);
+
+                //Task<int> Delay(int milliseconds)
+                //{
+                //    var tcs = new TaskCompletionSource<int>();
+                //    var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
+                //    timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(100); };
+                //    timer.Start();
+                //    return tcs.Task;
+                //}
+                ////delay.GetAwaiter();
+                ////delay.ContinueWith(() => { });
+                //Console.WriteLine("Act please!");
+                ////var result = delay.GetAwaiter();         //可以用AWAITER间接拿值
+                ////Console.WriteLine(result.GetResult());
+                //Console.WriteLine(delay.Result);           //也可以直接拿值，各有利弊，见NETSHELL
             }
             // Task Delay
             // The Delay method that we just wrote is sufficiently useful that it’s
@@ -431,7 +436,7 @@ namespace Net_5.Concurrent
                 // Value Task
                 //TODO: 执行顺序很混乱，没有结果，主线程没有执行最后两句，为什么？
 
-                {
+            {
                     //var vt1 = AnswerQuestionAsync("What's the answer to life?");
                     //var vt2 = AnswerQuestionAsync("Is the sun shining?");
 
