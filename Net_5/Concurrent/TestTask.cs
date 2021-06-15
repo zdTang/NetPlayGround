@@ -170,7 +170,7 @@ namespace Net_5.Concurrent
                 //{
                 //    int result = awaiter.GetResult();
                 //    Console.WriteLine(result);       // Writes result
-                //    });
+                //});
                 //// Console.WriteLine(primeNumberTask.Result);  // MAIN THREAD WILL WAIT HERE
                 //Console.WriteLine("bye");
                 ////主线程要等在这里才行

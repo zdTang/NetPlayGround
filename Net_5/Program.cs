@@ -43,8 +43,9 @@ namespace Net_5
             //Net_5.Concurrent.TestTask.Test();
             //Net_5.Concurrent.TestAwaiter.Test();
             //Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
-            Net_5.Concurrent.Asynchronous_Version_5.TestAsync();
+            Net_5.Concurrent.Asynchronous_Version_5.Test();
             //await Net_5.Concurrent.ch01_01.TestAsync();
+            //Net_5.Concurrent.illustratedBook_CH21.Test();
 
 
             //Net_5.Comparison.EqualityComparison.Test();
