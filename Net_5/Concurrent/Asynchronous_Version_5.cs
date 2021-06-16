@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -92,16 +93,164 @@ namespace Net_5.Concurrent
             #region Parallelism
 
             {
-                GoParallel();
-                Console.WriteLine("want scape? wait!!");
-                ReadKey();
-                Console.WriteLine("time to go");
+                //GoParallel();
+                //Console.WriteLine("want scape? wait!!");
+                //ReadKey();
+                //Console.WriteLine("time to go");
             }
 
             #endregion
 
+            #region Asynchronous Lambda Expression
+            {
+                //// Unnamed asynchronous method:
+                //// return value is a Task
+                //// 注意要加ASYNC
+                //Func<Task> unnamed = async () =>
+                //{
+                //    WriteLine($"IN unnamed={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //    await Task.Delay(1000);
+                //    Console.WriteLine("Foo");
+                //    WriteLine($"OUT unnamed={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //};
+                //// We can call the two in the same way:
+                //WriteLine($"IN Test={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //await NamedMethod(); //这是个关键点，线程返回CALLER后，这里要记录下这可AWAITABLE的TASK的CONTINUATION,
+                //                     //这包括这个NAMEMETHOD中AWAIT后没有完成的语句，，以及下面的AWAIT UNMAMED()
+                //                     //要理解这个AWAIT是个语法糖，相当于NAMEDMETHOD.GETAWAITER(),  AWAITER.ONCOMPLETE()
+                //await unnamed();
+                //WriteLine($"OUT Test={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            }
+            #endregion
+
+            #region Returning Task of TResult
+            {
+                //// 注意要加ASYNC
+                //Func<Task<int>> unnamed = async () =>
+                //{
+                //    WriteLine($"IN unnamed={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //    await Task.Delay(1000);//这里是关键点，新的线程要在DELAY结束时启动，执行后面的执作
+                //    WriteLine($"OUT unnamed={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //    return 123;
+                //};
+                //WriteLine($"IN Test={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //int answer = await unnamed(); //这里是关键点，主线程遇到DELAY后，要在这里返回CALLER,即MAIN中
+                //                               //而异步新线程执行完毕后，会返回这里，将值交给ANSWER,并向下进行
+                //                               //下面的代码是这个UNNAME的CONTINUATION
+                //answer.Dump();
+                //WriteLine($"OUT Test={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            }
+            #endregion
+
+            #region Optimizations=Completing Synchronously
+            {
+                //WriteLine($"IN Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //string html = await GetWebPageAsync("http://www.linqpad.net");
+                //WriteLine($"Back to Test First=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //html.Length.Dump("Characters downloaded");
+
+                //// Let's try again. It should be instant this time:
+                //html = await GetWebPageAsync("http://www.linqpad.net");
+                //WriteLine($"Back to Test Second=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //html.Length.Dump("Characters downloaded");
+                //WriteLine($"OUT Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            }
+            #endregion
+
+            #region Optimization=Caching Tasks
+            {
+
+                //WriteLine($"IN Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //string html = await GetWebPageAsyncTwo("http://www.linqpad.net");
+                //WriteLine($"Another Thread Back to Test First=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //html.Length.Dump("Characters downloaded");
+
+                //// Let's try again. It should be instant this time:
+                //html = await GetWebPageAsyncTwo("http://www.linqpad.net");
+                //html.Length.Dump("Characters downloaded");
+                //WriteLine($"OUT Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            }
+            #endregion
+
+            #region Optimization = Caching Tasks fully threadsafe
+            {
+                //加上了CACHE
+                WriteLine($"IN Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                string html = await GetWebPageAsyncThree("http://www.linqpad.net");
+                WriteLine($"Another Thread Back to Test First=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                html.Length.Dump("Characters downloaded");
+
+                // Let's try again. It should be instant this time:
+                html = await GetWebPageAsyncThree("http://www.linqpad.net");
+                html.Length.Dump("Characters downloaded");
+                WriteLine($"OUT Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            }
+            #endregion
+
+            #region Optimizations - Avoiding excessive bouncing
+            {
+                A();
+            }
+            #endregion
+
+        }
+        static async void A()
+        {
+            await B();
+        }
+
+        static async Task B()
+        {
+            for (int i = 0; i < 1000; i++)
+                await C().ConfigureAwait(false);
+        }
+        //todo: 为什么这里加上AWAIT就可以了
+        static async Task<string> C() { return await new WebClient().DownloadStringTaskAsync("http://www.linqpad.net"); }
 
 
+        static Dictionary<string, Task<string>> _cacheThree = new Dictionary<string, Task<string>>();
+
+        static Task<string> GetWebPageAsyncThree(string uri)
+        {
+            lock (_cacheThree)
+            {
+                WriteLine($"IN GetWebPageAsyncThree={_counter}==ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                Task<string> downloadTask;
+                if (_cacheThree.TryGetValue(uri, out downloadTask)) return downloadTask;
+                WriteLine($"IN GetWebPageAsyncThree={_counter}==ThreadID={Thread.CurrentThread.ManagedThreadId}==Async");
+                return _cacheThree[uri] = new WebClient().DownloadStringTaskAsync(uri); //这是异步的？ 这个对象是AWAITABLE,不加AWAIT会怎样？
+            }
+        }
+        static Dictionary<string, Task<string>> _cacheTwo =  new Dictionary<string, Task<string>>();
+
+        static Task<string> GetWebPageAsyncTwo(string uri)
+        {
+            _counter++;
+            WriteLine($"IN GetWebPageAsyncTwo={_counter}==ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            Task<string> downloadTask;
+            if (_cacheTwo.TryGetValue(uri, out downloadTask)) return downloadTask;
+            WriteLine($"IN GetWebPageAsyncTwo={_counter}==ThreadID={Thread.CurrentThread.ManagedThreadId}==Async");
+            return _cacheTwo[uri] = new WebClient().DownloadStringTaskAsync(uri); //这是异步的？ 是
+        }
+        
+        static Dictionary<string, string> _cache = new Dictionary<string, string>();
+
+        static async Task<string> GetWebPageAsync(string uri)
+        {
+            _counter++;
+            WriteLine($"IN GetWebPageAsync={_counter}==ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            string html;
+            if (_cache.TryGetValue(uri, out html)) return html;  //第二次是同步的，直接取回值，而不是由异步线程送回
+            WriteLine($"IN GetWebPageAsync=ThreadID={Thread.CurrentThread.ManagedThreadId}==Async");
+            return _cache[uri] = await new WebClient().DownloadStringTaskAsync(uri);  //第一次是异步的
+        }
+
+        static async Task NamedMethod()
+        {
+            WriteLine($"IN NamedMethod={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+            await Task.Delay(1000);
+            Console.WriteLine("Foo");
+            WriteLine($"OUT NamedMethod={_counter}=ThreadID={Thread.CurrentThread.ManagedThreadId}");
         }
         static async void DisplayPrimesCount()
         {
@@ -235,93 +384,98 @@ namespace Net_5.Concurrent
        //  TODO: ASYNCHRONOUS 和 PARALLEL并不是一回事
         static async Task GoParallel()
        {
-           //todo: 这是并行，两个结果同时出现
+           //下面四种格式，前两个格式是并发的，效率高，同时启动两个异步，两个异步并发执行
+           //两个异步之间不是同步关系，也是异步关系
+           //todo: 这是并行，两个结果同时出现,这是主线程引发了两次异步，两个异步由不同的THREAD接手
            {
                 //var task1 = PrintAnswerToLifeParallel();
                 //var task2 = PrintAnswerToLifeParallel();
                 //await task1;      //TASK1是一个结果，是个TASK,
                 //await task2;      //TASK2是一个结果，是个TASK,
-                ///*
-                //IN PrintAnswerToLifeParallel=1=ThreadID=1    //主线程进入PrintAnswerToLife
-                //IN GetAnswerToLifeParallel  =2=ThreadID=1    //主线程进入GetAnswerToLife, 遇到DELAY的AWAIT, 返回这里，执行第二行 var task2
-                //IN PrintAnswerToLifeParallel=3=ThreadID=1    //主线程进入PrintAnswerToLife
-                //IN GetAnswerToLifeParallel  =4=ThreadID=1    //主线程进入GetAnswerToLife
-                //want scape? wait!!                           //又执行到了DELAY 的AWAIT，返回这里，执行 AWAIT TASK1,又返回到TEST()中，执行WRITELINE()后，等候在那里
-                //EXIT GetAnswerToLifeParallel  =4=ThreadID=4  //AWAIT 结束后， 异步线程启动，开始执行CONTINUATION
-                //EXIT GetAnswerToLifeParallel  =4=ThreadID=5  //这里可以看出有两个线程在反向执行CONTINUATION,4和5
-                //EXIT PrintAnswerToLifeParallel=4=ThreadID=4
-                //EXIT PrintAnswerToLifeParallel=4=ThreadID=5
-                //42
-                //42
-                //Done
-                // time to go
-                //Hello World!
-                //*/
+                /////*
+                ////IN PrintAnswerToLifeParallel=1=ThreadID=1    //主线程进入PrintAnswerToLife
+                ////IN GetAnswerToLifeParallel  =2=ThreadID=1    //主线程进入GetAnswerToLife, 遇到DELAY的AWAIT, 返回这里，执行第二行 var task2
+                ////IN PrintAnswerToLifeParallel=3=ThreadID=1    //主线程进入PrintAnswerToLife
+                ////IN GetAnswerToLifeParallel  =4=ThreadID=1    //主线程进入GetAnswerToLife
+                ////want scape? wait!!                           //又执行到了DELAY 的AWAIT，返回这里，执行 AWAIT TASK1,又返回到TEST()中，执行WRITELINE()后，等候在那里
+                ////EXIT GetAnswerToLifeParallel  =4=ThreadID=4  //AWAIT 结束后， 异步线程启动，开始执行CONTINUATION
+                ////EXIT GetAnswerToLifeParallel  =4=ThreadID=5  //这里可以看出有两个线程在反向执行CONTINUATION,4和5
+                ////EXIT PrintAnswerToLifeParallel=4=ThreadID=4
+                ////EXIT PrintAnswerToLifeParallel=4=ThreadID=5
+                ////42
+                ////42
+                ////Done
+                //// time to go
+                ////Hello World!
+                ////*/
             }
-            //TODO: 这是异步，一前一后出现
+
+            //TODO: 这是并行，两个结果同时出现,这是主线程引发了两次异步，两个异步由不同的THREAD接手
+            {
+                //PrintAnswerToLifeParallel();
+                //PrintAnswerToLifeParallel();
+
+                ///*  顺序如下
+                //    IN PrintAnswerToLifeParallel=1=ThreadID=1
+                //    IN GetAnswerToLifeParallel  =2=ThreadID=1
+                //    IN PrintAnswerToLifeParallel=3=ThreadID=1
+                //    IN GetAnswerToLifeParallel  =4=ThreadID=1
+                //    Done
+                //    want scape? wait!!
+                //    EXIT GetAnswerToLifeParallel=4=ThreadID=4
+                //    EXIT GetAnswerToLifeParallel=4=ThreadID=5
+                //    EXIT PrintAnswerToLifeParallel=4=ThreadID=4
+                //    EXIT PrintAnswerToLifeParallel=4=ThreadID=5
+                //    42
+                //    42
+                // */
+            }
+            //以下两种情况大体是相同的，即第一个异步结束后，第二个异步才开始，而两个异步之间，实际上是同步关系
+            //TODO: 这是异步，一前一后出现， 这种是第一次异步之后，要等第一个异步结束了，再引发第二个异步
+            //虽然有两个异步，但两个异步之间是同步关系，一前一后
             {
                 //await PrintAnswerToLifeParallel();             // 注意写法，当写成这样时，await task1; 直接返回上一层
                 //await PrintAnswerToLifeParallel();             // 写成这样时，虽然有AWAIT,却仍然进入方法，为什么？
-                ///*
-                //    IN PrintAnswerToLifeParallel=1=ThreadID=1    // 主线程依次进入两个METHOD
-                //    IN GetAnswerToLifeParallel  =2=ThreadID=1
-                //    want scape? wait!!                           // 遇到最后一个AWAIT, 即TASK.DELAY处，开始返回到TASK()主线程                 
-                //    EXIT GetAnswerToLifeParallel=2=ThreadID=4    // DELAY结束，启动新线程 4，执行CONTINUATION
-                //    EXIT PrintAnswerToLifeParallel=2=ThreadID=4  // 从GetAnswerToLife返回PrintAnswerToLife
-                //    42
-                //    IN PrintAnswerToLifeParallel=3=ThreadID=4
-                //    IN GetAnswerToLifeParallel  =4=ThreadID=4
-                //    EXIT GetAnswerToLifeParallel=4=ThreadID=4
-                //    EXIT PrintAnswerToLifeParallel=4=ThreadID=4
-                //    42
-                //    Done
-                //     time to go
-                //    Hello World!
-                // */
+                /////*
+                ////    IN PrintAnswerToLifeParallel=1=ThreadID=1    // 主线程依次进入两个METHOD
+                ////    IN GetAnswerToLifeParallel  =2=ThreadID=1
+                ////    want scape? wait!!                           // 遇到最后一个AWAIT, 即TASK.DELAY处，开始返回到TASK()主线程                 
+                ////    EXIT GetAnswerToLifeParallel=2=ThreadID=4    // DELAY结束，启动新线程 4，执行CONTINUATION
+                ////    EXIT PrintAnswerToLifeParallel=2=ThreadID=4  // 从GetAnswerToLife返回PrintAnswerToLife
+                ////    42
+                ////    IN PrintAnswerToLifeParallel=3=ThreadID=4
+                ////    IN GetAnswerToLifeParallel  =4=ThreadID=4
+                ////    EXIT GetAnswerToLifeParallel=4=ThreadID=4
+                ////    EXIT PrintAnswerToLifeParallel=4=ThreadID=4
+                ////    42
+                ////    Done
+                ////     time to go
+                ////    Hello World!
+                //// */
             }
             //TODO: 
             {
-                //PrintAnswerToLifeParallel();
-                //PrintAnswerToLifeParallel();
+                //var task1 = PrintAnswerToLifeParallel();  //1
+                //await task1;                            //2   //注意，这个LINE2的CONTINUATION包含了下面子句
+                //var task2 = PrintAnswerToLifeParallel();  //3
+                //await task2;                            //4    
 
-                /*  顺序如下
-                    IN PrintAnswerToLifeParallel=1=ThreadID=1
-                    IN GetAnswerToLifeParallel  =2=ThreadID=1
-                    IN PrintAnswerToLifeParallel=3=ThreadID=1
-                    IN GetAnswerToLifeParallel  =4=ThreadID=1
-                    Done
-                    want scape? wait!!
-                    EXIT GetAnswerToLifeParallel=4=ThreadID=4
-                    EXIT GetAnswerToLifeParallel=4=ThreadID=5
-                    EXIT PrintAnswerToLifeParallel=4=ThreadID=4
-                    EXIT PrintAnswerToLifeParallel=4=ThreadID=5
-                    42
-                    42
-                 */
-           }
-            //TODO: 
-            {
-                var task1=PrintAnswerToLifeParallel();  //1
-                await task1;                            //2   //注意，这个LINE2的CONTINUATION包含了下面子句
-                var task2=PrintAnswerToLifeParallel();  //3
-                await task2;                            //4    
-
-                /*
-                    IN PrintAnswerToLifeParallel  =1=ThreadID=1            // 主线程进入PrintAnswerToLife
-                    IN GetAnswerToLifeParallel    =2=ThreadID=1            // 主线程进入GetAnswerToLife
-                    want scape? wait!!                                     // 遇到AWAIT DELAY,返回这里，执行LINE 2,返回上一层TEST(),执行WRITELINE(),等在那里
-                    EXIT GetAnswerToLifeParallel  =2=ThreadID=4            // 异步线程启动，反向操作，到LINE2
-                    EXIT PrintAnswerToLifeParallel=2=ThreadID=4
-                    42
-                    IN PrintAnswerToLifeParallel  =3=ThreadID=4
-                    IN GetAnswerToLifeParallel    =4=ThreadID=4
-                    EXIT GetAnswerToLifeParallel  =4=ThreadID=4
-                    EXIT PrintAnswerToLifeParallel=4=ThreadID=4
-                    42
-                    Done
-                     time to go
-                    Hello World!
-                 */
+                /////*
+                ////    IN PrintAnswerToLifeParallel  =1=ThreadID=1            // 主线程进入PrintAnswerToLife
+                ////    IN GetAnswerToLifeParallel    =2=ThreadID=1            // 主线程进入GetAnswerToLife
+                ////    want scape? wait!!                                     // 遇到AWAIT DELAY,返回这里，执行LINE 2,返回上一层TEST(),执行WRITELINE(),等在那里
+                ////    EXIT GetAnswerToLifeParallel  =2=ThreadID=4            // 异步线程启动，反向操作，到LINE2
+                ////    EXIT PrintAnswerToLifeParallel=2=ThreadID=4
+                ////    42
+                ////    IN PrintAnswerToLifeParallel  =3=ThreadID=4
+                ////    IN GetAnswerToLifeParallel    =4=ThreadID=4
+                ////    EXIT GetAnswerToLifeParallel  =4=ThreadID=4
+                ////    EXIT PrintAnswerToLifeParallel=4=ThreadID=4
+                ////    42
+                ////    Done
+                ////     time to go 
+                ////    Hello World!
+                //// */
             }
 
             WriteLine("Done");

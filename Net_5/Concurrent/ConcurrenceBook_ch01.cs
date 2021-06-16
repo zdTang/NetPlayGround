@@ -3,23 +3,30 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using static System.Console;
 
 namespace Net_5.Concurrent
 {
     class ch01_01
     {
+        private static int _counter = 0;
         public static async Task TestAsync()
         {
-            Console.WriteLine("hello");
-            await DoSomethingAsync();
+            _counter++;
+            //并非一遇到AWAIT就返回上一层CALLING中，而是要进入到到AWAIT的方法之中，到具体的AWAIT语句之前
+            WriteLine($"IN  TestAsync = {_counter} =ThreadID= {Thread.CurrentThread.ManagedThreadId}");
+            await DoSomethingAsync();  //这里要返回上一层MAIN()中，向下执行退出
+            WriteLine($"Out TestAsync = {_counter} =ThreadID= {Thread.CurrentThread.ManagedThreadId}");
         }
 
         
         static async Task DoSomethingAsync()
         {
-            Console.WriteLine("helloOne");
+            _counter++;
+            WriteLine($"IN  DoSomethingAsync = {_counter} =ThreadID= {Thread.CurrentThread.ManagedThreadId}");
             int value = 13;
 
             // Asynchronously wait 1 second.
@@ -29,7 +36,7 @@ namespace Net_5.Concurrent
 
             // Asynchronously wait 1 second.
             await Task.Delay(TimeSpan.FromSeconds(1));
-            Console.WriteLine("helloTWO");
+            WriteLine($"Out DoSomethingAsync = {_counter} =ThreadID= {Thread.CurrentThread.ManagedThreadId}");
             Trace.WriteLine(value);
         }
     }

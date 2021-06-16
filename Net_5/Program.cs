@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Net_5
@@ -9,6 +10,7 @@ namespace Net_5
     {
         static void Main(string[] args)
         {
+            Console.WriteLine($"IN  Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
             /*======加一个LOGGER====*/
             //Trace.Listeners.Clear();//CLEAR THE DEFAULT LISTENERS
             //var fileListener = new TextWriterTraceListener("D:\\trace.txt");
@@ -44,7 +46,9 @@ namespace Net_5
             //Net_5.Concurrent.TestAwaiter.Test();
             //Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
             Net_5.Concurrent.Asynchronous_Version_5.Test();
-            //await Net_5.Concurrent.ch01_01.TestAsync();
+            //Net_5.Concurrent.ch01_01.TestAsync();
+            Console.WriteLine($"BACK TO Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
+            Console.ReadKey();
             //Net_5.Concurrent.illustratedBook_CH21.Test();
 
 
@@ -60,6 +64,7 @@ namespace Net_5
             /*====Write into log file=====*/
             //fileListener.Flush();  //这个强制写入，冲掉CACHE.任何时候需要确保写入，用FLASH
             //fileListener.Close();// close the LOG FILE Handler
+            Console.WriteLine($"Out  Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
         }
 
 
