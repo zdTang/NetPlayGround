@@ -642,45 +642,45 @@ namespace Net_5.Linq
             {
                 
 
-                //现在看这个QUREY,就清晰一些了
-                //与ENUMERABLE不同，Enumerable只是QUERY LOCAL COLLECTION. 在RUNTIME时,将QUERY OPERATOR 解析为一系列DECORATOR SEQUENCE
-                //QUERYABLE则被SOLVED成EXPRESSION TREE,直接QUERY 远程DB
+                ////现在看这个QUREY,就清晰一些了
+                ////与ENUMERABLE不同，Enumerable只是QUERY LOCAL COLLECTION. 在RUNTIME时,将QUERY OPERATOR 解析为一系列DECORATOR SEQUENCE
+                ////QUERYABLE则被SOLVED成EXPRESSION TREE,直接QUERY 远程DB
                 
-                IQueryable<string> query = from c in dbContext.Customers 
-                    where c.Name.Contains("a") 
-                    orderby c.Name.Length 
-                    select c.Name.ToUpper();
+                //IQueryable<string> query = from c in dbContext.Customers 
+                //    where c.Name.Contains("a") 
+                //    orderby c.Name.Length 
+                //    select c.Name.ToUpper();
 
                 
 
-                //Fluent Expression
-                IQueryable<string> queryTwo = dbContext.Customers.Where(n => n.Name.Contains("a")).OrderBy(n => n.Name.Length)
-                    .Select(n => n.Name.ToUpper());
+                ////Fluent Expression
+                //IQueryable<string> queryTwo = dbContext.Customers.Where(n => n.Name.Contains("a")).OrderBy(n => n.Name.Length)
+                //    .Select(n => n.Name.ToUpper());
 
-                foreach (string name in query) Console.WriteLine(name);
+                //foreach (string name in query) Console.WriteLine(name);
 
-                foreach (string name in queryTwo) Console.WriteLine(name);
+                //foreach (string name in queryTwo) Console.WriteLine(name);
 
             }
             // Combining Interpreted and Local Queries
             {
-                //using var dbContext = new NutshellContext();  //建一个DBCONTEXT
-                // This uses a custom 'Pair' extension method, defined below.
+                ////using var dbContext = new NutshellContext();  //建一个DBCONTEXT
+                //// This uses a custom 'Pair' extension method, defined below.
 
-                dbContext.Customers
-                    .Select(c => c.Name.ToUpper())
-                    .Pair()                                 // Local from this point on.
-                    .OrderBy(n => n)
-                    .Dump();
+                //dbContext.Customers
+                //    .Select(c => c.Name.ToUpper())
+                //    .Pair()                                 // Local from this point on.
+                //    .OrderBy(n => n)
+                //    .Dump();
 
-                // Here's a more substantial example:
+                //// Here's a more substantial example:
 
-                dbContext.Customers
-                    .Select(c => c.Name.ToUpper())
-                    .OrderBy(n => n)
-                    .Pair()                         // Local from this point on.
-                    .Select((n, i) => "Pair " + i.ToString() + " = " + n)
-                    .Dump();
+                //dbContext.Customers
+                //    .Select(c => c.Name.ToUpper())
+                //    .OrderBy(n => n)
+                //    .Pair()                         // Local from this point on.
+                //    .Select((n, i) => "Pair " + i.ToString() + " = " + n)
+                //    .Dump();
             }
             //Regex
             {

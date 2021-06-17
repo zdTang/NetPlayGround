@@ -465,10 +465,222 @@ namespace Net_5.Concurrent
                     //}
                     //Console.WriteLine("Act please!");   //这一句以及下一句没有执行，就退出了，为什么？
                     //Thread.Sleep(10000);//主人要在这里等着
-                }
+            }
 
-                #endregion
+            #endregion
+
+            #region MyTest
+
+            {
+                //await Task.Run(PrintOne);
+                //await Task.Run(PrintTwo);
+                ////
+                ///*
+                //    IN  Main() ===ThreadID = 1
+                //    PrintOne,  ThreadID : 4
+                //    MIKE
+                //    BACK TO Main() ===ThreadID = 1
+                //    PrintTwo,  ThreadID : 4
+                //    MIKE Tang
+                //     Out  Main() ===ThreadID = 1
+                //    Hello World!
+                // */
+
+            }
+
+
+            {
+                //Task.Run(PrintOne);
+                //Task.Run(PrintTwo);
+
+                ////
+                ///*
+                //IN  Main() ===ThreadID = 1
+                //BACK TO Main() ===ThreadID = 1
+                //PrintOne,  ThreadID : 4
+                //MIKE
+                //PrintTwo,  ThreadID : 5
+                //MIKE Tang
+                // Out  Main() ===ThreadID = 1
+                //Hello World!
+                // */
+            }
+
+            {
+                //Task task1=Task.Run(PrintOne);
+                //Task task2 = Task.Run(PrintTwo);
+                //await task1;
+                //await task2;
+
+                ////
+                ///*
+                //    IN  Main() ===ThreadID = 1
+                //    PrintTwo,  ThreadID : 4
+                //    MIKE Tang
+                //    PrintOne,  ThreadID : 5
+                //    MIKE
+                //    BACK TO Main() ===ThreadID = 1
+                //     Out  Main() ===ThreadID = 1
+                //    Hello World!
+                // */
+            }
+
+
+            {
+                //Task task1 = Task.Run(PrintOne);
+                //Task task2 = Task.Run(PrintTwo);
+                //await task1;
+
+
+                ////
+                ///*
+                //    IN  Main() ===ThreadID = 1
+                //    PrintTwo,  ThreadID : 5
+                //    MIKE Tang
+                //    PrintOne,  ThreadID : 4
+                //    MIKE
+                //    BACK TO Main() ===ThreadID = 1
+                //     Out  Main() ===ThreadID = 1
+                //    Hello World!
+                // */
+
+            }
+
+            {
+                //Task task1 = Task.Run(PrintOne);
+                //Task task2 = Task.Run(PrintTwo);
+                //await task2;
+
+
+                ////
+                ///*
+                //    IN  Main() ===ThreadID = 1
+                //    PrintTwo,  ThreadID : 5
+                //    MIKE Tang
+                //    PrintOne,  ThreadID : 4
+                //    MIKE
+                //    BACK TO Main() ===ThreadID = 1
+                //     Out  Main() ===ThreadID = 1
+                //    Hello World!
+                // */
+            }
+
+            {
+                //await Task.Run(PrintOne);
+                //Task.Run(PrintTwo);
+
+
+
+                ////
+                ///*
+                //    IN  Main() ===ThreadID = 1
+                //    PrintOne,  ThreadID : 4
+                //    MIKE
+                //    BACK TO Main() ===ThreadID = 1
+                //    PrintTwo,  ThreadID : 5
+                //    MIKE Tang
+                //     Out  Main() ===ThreadID = 1
+                //    Hello World!
+                // */
+            }
+            {
+                //Task.Run(PrintOne);
+                //await Task.Run(PrintTwo);
+
+
+
+                ////
+                ///*
+                //    IN  Main() ===ThreadID = 1
+                //    PrintTwo,  ThreadID : 5
+                //    PrintOne,  ThreadID : 4
+                //    MIKE
+                //    MIKE Tang
+                //    BACK TO Main() ===ThreadID = 1
+                //     Out  Main() ===ThreadID = 1
+                //    Hello World!
+                // */
+            }
+            {
+                Console.WriteLine("In Test");
+                await Task.Run(TestOne);
+                Console.WriteLine("Between Test");
+                await Task.Run(TestTwo);
+                Console.WriteLine("Out Test");
+
+                /*
+                IN  Main() ===ThreadID = 1
+                In Test
+                BACK TO Main() ===ThreadID = 1  //   这里涉及反回CALLER的时机，遇到TASK时才返回，如果AWAIT一个方法，要进入后，找到TASK才回去
+                TestOne-Before Delay,  ThreadID : 4   //遇到 TESTONE中的AWAIT, 退出TESTONE
+                Between Test                          // 
+                TestTwo-Before Delay,  ThreadID : 4
+                Out Test
+                TestOne-After  Delay,  ThreadID : 4
+                MIKE
+                TestTwo-After  Delay,  ThreadID : 4
+                MIKE Tang
+                 Out  Main() ===ThreadID = 1
+                Hello World!
+                 */
+            }
+
+            {
+                //Console.WriteLine("In Test");
+                //Task.Run(TestOne);
+                //Console.WriteLine("Between Test");
+                //Task.Run(TestTwo);
+                //Console.WriteLine("Out Test");
+
+                ///*
+                //IN  Main() ===ThreadID = 1
+                //In Test
+                //Between Test
+                //Out Test
+                //BACK TO Main() ===ThreadID = 1
+                //TestOne-Before Delay,  ThreadID : 4
+                //TestTwo-Before Delay,  ThreadID : 5
+                //TestOne-After  Delay,  ThreadID : 4
+                //MIKE
+                //TestTwo-After  Delay,  ThreadID : 4
+                //MIKE Tang
+                // Out  Main() ===ThreadID = 1
+                //Hello World!
+                // */
+            }
+            #endregion
 
         }
+
+        static void PrintOne()
+        {
+            Console.WriteLine($"PrintOne,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine("MIKE");
+        }
+
+        static void PrintTwo()
+        {
+            Console.WriteLine($"PrintTwo,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine("MIKE Tang");
+        }
+
+        static async void TestOne()
+        {
+            Console.WriteLine($"TestOne-Before Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            await Task.Delay(5000);
+            Console.WriteLine($"TestOne-After  Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine("MIKE");
+        }
+
+        static async void TestTwo()
+        {
+            Console.WriteLine($"TestTwo-Before Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            await Task.Delay(10000);
+            Console.WriteLine($"TestTwo-After  Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine("MIKE Tang");
+        }
+
+
+
     }
 }
