@@ -25,7 +25,7 @@ namespace Net_5.Concurrent
                 //Console.ReadKey();
                 //Console.WriteLine("Time to go!");
 
-                //Console.WriteLine("============="); 
+                //Console.WriteLine("=============");
 
 
             }
@@ -35,19 +35,24 @@ namespace Net_5.Concurrent
             #region Fine-grained Asynchrony 细粒度异步
 
             {
-                ////如果主线程不给时间，则直接就退出了，主线程不会等
-                //DisplayPrimeCounts();
+                //Console.WriteLine($"no_1  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //////如果主线程不给时间，则直接就退出了，主线程不会等
 
+                //DisplayPrimeCounts();
+                //Console.WriteLine($"no_2  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //void DisplayPrimeCounts()
                 //{
+                //    Console.WriteLine($"no_3  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //    DisplayPrimeCountsFrom(0);
                 //}
 
                 //void DisplayPrimeCountsFrom(int i)      // This is starting to get awkward!
                 //{
+                //    Console.WriteLine($"no_4  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //    var awaiter = GetPrimesCountAsync(i * 1000000 + 2, 1000000).GetAwaiter();
                 //    awaiter.OnCompleted(() =>
                 //    {
+                //        Console.WriteLine($"no_5  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //        Console.WriteLine(awaiter.GetResult() + " primes between " + (i * 1000000) + " and " + ((i + 1) * 1000000 - 1));
                 //        if (i++ < 10) DisplayPrimeCountsFrom(i);//这里用了RECURSION,在这里不断递调自己
                 //        else Console.WriteLine("Done");
@@ -68,6 +73,7 @@ namespace Net_5.Concurrent
                 ////Thread.Sleep(3000);
                 //Console.ReadKey();
                 //Console.WriteLine("Time to go!");
+                //Console.WriteLine($"no_6  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
 
             }
 
@@ -76,17 +82,21 @@ namespace Net_5.Concurrent
             #region Making Asynchronous
 
             {
+                //Console.WriteLine($"no_1  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //DisplayPrimeCountsAsync();
+                //Console.WriteLine($"no_7  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //// 注意，TASK是没有返回值的，是VOID
                 //// 这里用了TASK,却并没有涉及到线程
                 //Task DisplayPrimeCountsAsync()
                 //{
+                //    Console.WriteLine($"no_2  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //    var machine = new PrimesStateMachine();
                 //    machine.DisplayPrimeCountsFrom(0);
+                //    Console.WriteLine($"no_3  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //    return machine.Task;
                 //}
 
-
+                //Console.WriteLine($"no_4  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //Console.WriteLine("Time to sleep!");
                 //Console.ReadKey();
 
@@ -98,8 +108,9 @@ namespace Net_5.Concurrent
             #region Asynchronous Functions to the rescue
 
             {
+                //Console.WriteLine($"no_1 ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 //DisplayPrimeCountsAsync();
-
+                //Console.WriteLine($"no_2  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
 
                 //Console.WriteLine("Time to sleep!");
                 //Console.ReadKey();
@@ -132,8 +143,12 @@ namespace Net_5.Concurrent
         static async Task DisplayPrimeCountsAsync()
         {
             for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine($"no_3  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 Console.WriteLine(await GetPrimesCountAsync(i * 1000000 + 2, 1000000) +
                                   " primes between " + (i * 1000000) + " and " + ((i + 1) * 1000000 - 1));
+
+            }
 
             Console.WriteLine("Done!");
         }
@@ -142,6 +157,7 @@ namespace Net_5.Concurrent
         //注意返回值是TASK<INT>,这里变成异步的了
         static Task<int> GetPrimesCountAsync(int start, int count)
         {
+            Console.WriteLine($"no_4  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
             return Task.Run(() =>
                 ParallelEnumerable.Range(start, count).Count(n =>
                     Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i > 0)));
@@ -157,12 +173,14 @@ namespace Net_5.Concurrent
 
         public void DisplayPrimeCountsFrom(int i)
         {
+            Console.WriteLine($"no_5  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
             var awaiter = GetPrimesCountAsync(i * 1000000 + 2, 1000000).GetAwaiter();
             awaiter.OnCompleted(() =>
             {
+                Console.WriteLine($"no_6  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                 Console.WriteLine(awaiter.GetResult());
                 if (i++ < 10) DisplayPrimeCountsFrom(i);
-                else { Console.WriteLine("Done"); _tcs.SetResult(null); }
+                else { Console.WriteLine("Done"); _tcs.SetResult(null); } // non-generic Task 
             });
         }
          

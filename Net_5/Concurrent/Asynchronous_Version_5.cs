@@ -59,6 +59,133 @@ namespace Net_5.Concurrent
 
             #endregion
 
+            #region Change GetAwait to await
+            //此例中的调用方法时，不是通过TASK.RUN()调用的，而是主THREAD直接调用的， 因而不是THREAD BACKING的异步
+            //因为，这个异步过程如果不用AWAIT,就只有一个线程，即主线程
+            //这与一种情况是有相似，但还是有区别的：
+            //比如用TASK.RUN()运行了另外一个THREAD, 那么主线程为了获取这个副线程的值，在哪里取值就可以在哪里BLACK等
+            //但此时，异步只有主线程一人在干，没有生成另外一个线程
+            
+            {
+                ////同步版本
+                ////结果：虽然是异步，但只有一个线程
+                ////主线程从开始现最后，它BLOCKING在取值的位置,如果离取值之前，又经历了一段时间，到取值时，可能不需要等，已经取出来了 
+                ///*
+                //    IN  Main() ===ThreadID = 1
+                //    before delay,  ThreadID : 1
+                //    In Delay,  ThreadID : 1
+                //    Out Delay,  ThreadID : 1
+                //    after delay,  ThreadID : 1
+                //    Will Blocking here...
+                //    100                       //主线程BLOCKING在这里等值，后面的也都由主线程完成
+                //    READY TO GO,  ThreadID : 1
+                //    Other stuff,  ThreadID : 1
+                //    BACK TO Main() ===ThreadID = 1
+                //     Out  Main() ===ThreadID = 1
+                //    Hello World!
+
+                // */
+
+                //学会如何用TaskCompletionSource
+                //由于返回的是一个TASK,因而增加了很多灵活性， TASK就是可等的
+                //这里要别开的一个事情是，不是只有TASK.RUN（）才能生成TASK,没有NEW THREAD也能生成TASK
+                Task<int> Delay(int milliseconds)//这个DELAY方法并没有用一个新THREAD完成
+                {
+                    Console.WriteLine($"In Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                    var tcs = new TaskCompletionSource<int>();
+                    var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
+                    timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(100); };
+                    timer.Start();
+                    Console.WriteLine($"Out Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                    return tcs.Task;
+                }
+
+
+                Console.WriteLine($"before delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                Task<int> delay = Delay(5000);
+                Console.WriteLine($"after delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+
+
+                Console.WriteLine("Will Blocking here...");
+                Console.WriteLine(delay.Result);           //也可以直接拿值，各有利弊，见NETSHELL
+                Console.WriteLine($"READY TO GO,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                Console.WriteLine($"Other stuff,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            }
+                //用AWAIT改写上面的程序，上面是用一个THREAD实现的异步，只有一个THREAD 1
+                //下面的用了AWAIT, 在AWAIT之后，新的THREAD出现了  4，
+                //结果，加了AWAIT
+                /*
+                 IN  Main() ===ThreadID = 1
+                before delay,  ThreadID : 1
+                In Delay,  ThreadID : 1
+                Out Delay,  ThreadID : 1
+                after delay,  ThreadID : 1
+                Act please!
+                BACK TO Main() ===ThreadID = 1  //此处，开始不同了，主线程返回，后面的由异步线程完成
+                100
+                READY TO GO,  ThreadID : 4      //另外又出现一个线程 4
+                 Out  Main() ===ThreadID = 1
+                Hello World!
+                 */
+                {
+                //Task<int> Delay(int milliseconds)//这个DELAY方法并没有用一个新THREAD完成
+                //{
+                //    Console.WriteLine($"In Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //    var tcs = new TaskCompletionSource<int>();
+                //    var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
+                //    timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(100); };
+                //    timer.Start();
+                //    Console.WriteLine($"Out Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //    return tcs.Task;
+                //}
+
+                //Console.WriteLine($"before delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //Task<int> delay = Delay(5000);
+                //Console.WriteLine($"after delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //Console.WriteLine("Act please!");
+                //int result = await delay;            //主线程从这里返回到MAIN， 这里DELAY的确是个TASK,因而直接返回
+                //Console.WriteLine(result);           //
+                //Console.WriteLine($"READY TO GO,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+            }
+                //这个又改写一个AWAIT的位置
+                /*
+                    IN  Main() ===ThreadID = 1      // 从这看到，遇到AWAIT时，主线程要进入AWAIT表达式中，一直走出来
+                    before delay,  ThreadID : 1
+                    In Delay,  ThreadID : 1
+                    Out Delay,  ThreadID : 1
+                    BACK TO Main() ===ThreadID = 1  // 主线程离开
+                    after delay,  ThreadID : 4      // AWAIT之后，就是异步线程在做CONTINUATION
+                    Act please!
+                    100
+                    READY TO GO,  ThreadID : 4
+                     Out  Main() ===ThreadID = 1
+                    Hello World!
+                 */
+                {
+                //    Task<int> Delay(int milliseconds)//这个DELAY方法并没有用一个新THREAD完成
+                //        {
+                //            Console.WriteLine($"In Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //            var tcs = new TaskCompletionSource<int>();
+                //            var timer = new System.Timers.Timer(milliseconds) { AutoReset = false };
+                //            timer.Elapsed += delegate { timer.Dispose(); tcs.SetResult(100); };
+                //            timer.Start();
+                //            Console.WriteLine($"Out Delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //            return tcs.Task;
+                //        }
+
+                //        Console.WriteLine($"before delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //        var result= await Delay(5000);  //主线程从这里返回到MAIN， 这里DELAY的确是个TASK,因而直接返回
+                //        Console.WriteLine($"after delay,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //        Console.WriteLine("Act please!");
+                         
+                //        Console.WriteLine(result);           //
+                //        Console.WriteLine($"READY TO GO,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                //}
+
+            }
+
+            #endregion
+
             #region Capturing Local State
 
             {
@@ -174,22 +301,22 @@ namespace Net_5.Concurrent
 
             #region Optimization = Caching Tasks fully threadsafe
             {
-                //加上了CACHE
-                WriteLine($"IN Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
-                string html = await GetWebPageAsyncThree("http://www.linqpad.net");
-                WriteLine($"Another Thread Back to Test First=ThreadID={Thread.CurrentThread.ManagedThreadId}");
-                html.Length.Dump("Characters downloaded");
+                ////加上了CACHE
+                //WriteLine($"IN Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //string html = await GetWebPageAsyncThree("http://www.linqpad.net");
+                //WriteLine($"Another Thread Back to Test First=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //html.Length.Dump("Characters downloaded");
 
-                // Let's try again. It should be instant this time:
-                html = await GetWebPageAsyncThree("http://www.linqpad.net");
-                html.Length.Dump("Characters downloaded");
-                WriteLine($"OUT Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
+                //// Let's try again. It should be instant this time:
+                //html = await GetWebPageAsyncThree("http://www.linqpad.net");
+                //html.Length.Dump("Characters downloaded");
+                //WriteLine($"OUT Test=ThreadID={Thread.CurrentThread.ManagedThreadId}");
             }
             #endregion
 
             #region Optimizations - Avoiding excessive bouncing
             {
-                A();
+                //A();
             }
             #endregion
 

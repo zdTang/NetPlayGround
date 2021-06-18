@@ -42,7 +42,7 @@ namespace Net_5
 
             /*================Concurrency=================*/
             //Net_5.Concurrent.Multithreading.Test();
-            Net_5.Concurrent.TestTask.Test();
+            //Net_5.Concurrent.TestTask.Test();
             //Net_5.Concurrent.TestAwaiter.Test();
             //Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
             //Net_5.Concurrent.Asynchronous_Version_5.Test();
@@ -50,7 +50,9 @@ namespace Net_5
             //Net_5.Concurrent.illustratedBook_CH21.Test();
             //Net_5.Concurrent.Asynchronous_Stream.Test();
             //Net_5.Concurrent.AsynchronousPatterns.Test();
-            Console.WriteLine($"BACK TO Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
+            
+            Net_5.Stream.StreamIO.Test();
+
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();
@@ -61,10 +63,13 @@ namespace Net_5
             //Net_5.Diagnostics.TestDiagnostic.Test();
             //Net_5.TryCatch.TestThrow.Test();
 
+
+
             /*====Write into log file=====*/
+
             //fileListener.Flush();  //这个强制写入，冲掉CACHE.任何时候需要确保写入，用FLASH
             //fileListener.Close();// close the LOG FILE Handler
-
+            Console.WriteLine($"BACK TO Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
             Console.ReadKey();
             Console.WriteLine($"Out  Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
             Console.WriteLine("Hello World!");
