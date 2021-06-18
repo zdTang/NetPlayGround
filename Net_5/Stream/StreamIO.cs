@@ -14,12 +14,25 @@ namespace Net_5.Stream
         {
             //Create and Write
             {
-                //using (System.IO.Stream s = new FileStream("d://test.txt", FileMode.Create))
+                //TODO:  坑
+                /*
+                   public enum FileMode
+                      {
+                        CreateNew = 1,
+                        Create = 2,
+                        Open = 3,
+                        OpenOrCreate = 4,
+                        Truncate = 5,
+                        Append = 6,
+                      }
+                 */
+
+
+                //using (System.IO.Stream s = new FileStream("d://demo.log", FileMode.Create))
                 //{
                 //    Console.WriteLine(s.CanRead);       // True
                 //    Console.WriteLine(s.CanWrite);      // True
-                //    Console.WriteLine(s.CanSeek);       // True
-
+                //    Console.WriteLine(s.CanSeek);       // 表示可以Seek
                 //    s.WriteByte(101);
                 //    s.WriteByte(102);
                 //    byte[] block = { 1, 2, 3, 4, 5 };
@@ -63,30 +76,75 @@ namespace Net_5.Stream
 
                 }
                 #endregion
-                {
-                    using (System.IO.Stream s = new FileStream("c:\\demo.txt", FileMode.Open))
-                    {
-                        byte[] data = new byte[1000]; // bytesRead will always end up at 1000, unless the stream is // itself smaller in length:
-                        int bytesRead = 0; int chunkSize = 1;
-                        // Assuming s is a stream: byte[] data = new byte [1000];
-                        //s.Read(data, 0, data.Length);
 
-                        // The correct way to read a file
-                        while (bytesRead < data.Length && chunkSize > 0)
-                        {
-                            bytesRead +=
-                        chunkSize = s.Read(data, bytesRead, data.Length - bytesRead);
-                        }
-                        // another way to read a file
-                        byte[] dataTwo = new BinaryReader(s).ReadBytes((int)s.Length);
-                    }
+                // Reading Test
+                {
+                    //using (System.IO.Stream s = new FileStream("d:\\trace.txt", FileMode.Open))
+                    //{
+
+                    //    s.Position = 0; 
+                    //    byte[] block = new byte[1000];
+                    //    int num = await s.ReadAsync(block, 0, block.Length);
+                    //    Console.WriteLine($"no_4,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                    //    Console.WriteLine($"no_4,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                    //    Console.ReadKey();
+
+                    //}
+
+                }
+                //丙种方式读文件，第一种，LOOP读入数组
+                {
+                    //using (System.IO.Stream s = new FileStream("d:\\demo.log", FileMode.Open))
+                    //{
+                    //    byte[] data = new byte[1000]; // bytesRead will always end up at 1000, unless the stream is // itself smaller in length:
+                    //    int bytesRead = 0;
+                    //    int chunkSize = 1;  //这里设为1，很奇怪，因为很快被覆盖，但设为0，LOOP就不动
+                    //                        //可视为一个技巧，开始设为1，是为了让LOOP开动，因为这个值起被汇总之前，总要被覆盖的
+                    //                        // Assuming s is a stream: byte[] data = new byte [1000];
+                    //                        //s.Read(data, 0, data.Length);
+
+                    //    //The correct way to read a file
+                    //    while (bytesRead < data.Length && chunkSize > 0)
+                    //    {
+                    //        chunkSize = s.Read(data, bytesRead, data.Length - bytesRead);
+
+                    //        bytesRead += chunkSize;
+                    //    }
+                    //    //another way to read a file
+                    //    // 这种方法用ARRAY来读文件，注意，这个数组没有设定大小，是动态的
+                    //    // 由于当前用的是一个FILE HANDLER，此时读，会从上面LOOP读的位置往下读
+                    //    byte[] dataTwo = new BinaryReader(s).ReadBytes((int)s.Length);
+                    //}
 
 
 
                 }
+                // 第二种 BinaryReader, 这种方法更好
+                // 注意动态数组的用法。这应该是先读出来，再根据尺寸来设ARRAY,而不是先建的ARRAY
+                {
+                    //using (System.IO.Stream s = new FileStream("d:\\demo.log", FileMode.Open))
+                    //{
+                       
+                    //    //another way to read a file
+                    //    // 这种方法用ARRAY来读文件，注意，这个数组没有设定大小，是动态的
+                    //    // 如果用同一个FILE HANDLER， 从前面读到的指针位置往下读
+                    //    byte[] dataTwo = new BinaryReader(s).ReadBytes((int)s.Length);
+                    //}
 
+                }
+                // Seeking
+                {
+                    using (System.IO.Stream s = new FileStream("d:\\demo.log", FileMode.Open))
+                    {
+                        var a = s.CanRead;
+                        var b = s.CanSeek;
+                        var c = s.CanTimeout;
+                        var d = s.CanWrite;
+                        var position=s.Position;
 
+                    }
 
+                }
                 {
                     //FileStream fs1 = File.OpenRead("demo.txt"); // Read-only
                     //FileStream fs2 = File.OpenWrite("demo.txt"); // Write-only
