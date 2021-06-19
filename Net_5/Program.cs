@@ -50,9 +50,16 @@ namespace Net_5
             //Net_5.Concurrent.illustratedBook_CH21.Test();
             //Net_5.Concurrent.Asynchronous_Stream.Test();
             //Net_5.Concurrent.AsynchronousPatterns.Test();
-            
-            Net_5.Stream.StreamIO.Test();
 
+
+            /*================ IO =================*/
+            //Net_5.Stream.StreamIO.Test();
+            //Net_5.Stream.Adapter.Test();
+
+
+            /*================ NetWorking =================*/
+
+            Net_5.Networking.Client_side.Test();
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();

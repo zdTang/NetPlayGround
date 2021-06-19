@@ -29,6 +29,11 @@ namespace Net_5
                         Console.WriteLine((item ?? "null").ToString());
                     }
                     break;
+                case string s:
+                   {
+                        Console.WriteLine(s);
+                    }
+                    break;
                 case IEnumerable t:
                     foreach (object item in t)
                     {

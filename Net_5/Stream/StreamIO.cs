@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Net_5.Stream
 {
@@ -56,7 +57,7 @@ namespace Net_5.Stream
                 #region FileStream
                 {
 
-                    //using (System.IO.Stream s = new FileStream("c:\\test.txt", FileMode.Create))
+                    //using (System.IO.Stream s = new FileStream("c:\\test.txt", FileMode.Create,FileAccess.Read))
                     //{
                     //    Console.WriteLine($"no_1,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
                     //    byte[] block = { 1, 2, 3, 4, 5 };
@@ -73,6 +74,36 @@ namespace Net_5.Stream
                     //// Clean up
                     //File.Delete("c:\\test.txt");
                     //Console.WriteLine($"no_5,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+
+                }
+
+
+                // WORK WITH DIRECTORY
+                {
+                    //string baseFolder = AppDomain.CurrentDomain.BaseDirectory;
+                    //string logoPath = Path.Combine(baseFolder, "trace.txt");
+                    //Console.WriteLine(File.Exists(logoPath));
+                }
+
+                //## ShortCut Method
+                {
+                    //string result= File.ReadAllText("d://trace.txt");//returns a string
+                    //string[] resutlTwo=File.ReadAllLines("d://trace.txt");//returns an array of strings
+                    //byte[] resultByte=File.ReadAllBytes("d://trace.txt");//returns a byte array
+                    //File.WriteAllText("d://traceTwo.txt", result);
+                    //File.WriteAllLines("d://traceTwo.txt", resutlTwo);
+                    //File.WriteAllBytes("d://traceTwo.txt", resultByte);
+                    //File.AppendAllText("d://traceTwo.txt","hello ,append"); //great for appending to a log file
+                }
+
+
+                //## Memory Stream
+                {
+                    //FileStream fs=File.OpenRead("d://trace.txt");
+                    //var ms = new MemoryStream();
+                    //fs.CopyTo(ms);
+                    //var myFileStream=ms.ToArray();
+                    //var l=ms.Length;
 
                 }
                 #endregion
@@ -110,10 +141,7 @@ namespace Net_5.Stream
 
                     //        bytesRead += chunkSize;
                     //    }
-                    //    //another way to read a file
-                    //    // 这种方法用ARRAY来读文件，注意，这个数组没有设定大小，是动态的
-                    //    // 由于当前用的是一个FILE HANDLER，此时读，会从上面LOOP读的位置往下读
-                    //    byte[] dataTwo = new BinaryReader(s).ReadBytes((int)s.Length);
+
                     //}
 
 
@@ -124,7 +152,7 @@ namespace Net_5.Stream
                 {
                     //using (System.IO.Stream s = new FileStream("d:\\demo.log", FileMode.Open))
                     //{
-                       
+
                     //    //another way to read a file
                     //    // 这种方法用ARRAY来读文件，注意，这个数组没有设定大小，是动态的
                     //    // 如果用同一个FILE HANDLER， 从前面读到的指针位置往下读
@@ -132,18 +160,19 @@ namespace Net_5.Stream
                     //}
 
                 }
-                // Seeking
+                //Create s FileStream
                 {
-                    using (System.IO.Stream s = new FileStream("d:\\demo.log", FileMode.Open))
-                    {
-                        var a = s.CanRead;
-                        var b = s.CanSeek;
-                        var c = s.CanTimeout;
-                        var d = s.CanWrite;
-                        var position=s.Position;
+                    //FileStream fs1 = File.OpenRead("d://trace.txt"); // Read-only
+                    
+                    ////fs1.WriteByte(47);   //编译时不报错，RUNTIME报错
+                    ////fs1.Flush();
+                    //FileStream fs2 = File.OpenWrite("d://writeme.tmp"); // Write-only
+                    //fs2.WriteByte(47);   //编译时不报错，RUNTIME报错
+                    //fs2.Flush();
+                    //FileStream fs3 = File.Create("d://readwrite.tmp"); // Read/write
 
-                    }
-
+                    ////using var fs = new FileStream("readwrite.tmp", FileMode.Open);
+                    
                 }
                 {
                     //FileStream fs1 = File.OpenRead("demo.txt"); // Read-only
@@ -156,6 +185,23 @@ namespace Net_5.Stream
                     byte[] demoByte=File.ReadAllBytes("demo.txt");
                     string[] demoLine=File.ReadAllLines("demo.txt");*/
                 }
+                    // Seeking
+                    {
+                    //using (System.IO.Stream s = new FileStream("d:\\demo.log", FileMode.Open))
+                    //{
+                    //    var a = s.CanRead;
+                    //    var b = s.CanSeek;
+                    //    var c = s.CanTimeout;
+                    //    var d = s.CanWrite;
+                    //    //var f=s.
+                    //    var position = s.Position;
+
+                    //}
+
+                }
+        
+
+         
 			}
         }
     }
