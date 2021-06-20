@@ -19,4 +19,13 @@
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="LINQPad.GUI">
+      <HintPath>..\..\..\LINQPad6\LINQPad.GUI.dll</HintPath>
+    </Reference>
+    <Reference Include="LINQPad.Runtime">
+      <HintPath>..\..\..\LINQPad6\LINQPad.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

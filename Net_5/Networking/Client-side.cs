@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -82,17 +83,164 @@ namespace Net_5.Networking
                 }
                 //  Response Message
                 {
-                    var client = new HttpClient();
-                    // The GetAsync method also accepts a CancellationToken.
-                    Console.WriteLine($"NO 1,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
-                    HttpResponseMessage response = await client.GetAsync("http://www.linqpad.net");
-                    var header = response.Headers;
-                    Console.WriteLine($"NO 2,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
-                    response.EnsureSuccessStatusCode();
-                    string html = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"NO 3,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
-                    html.Dump("html");
+                    //var client = new HttpClient();
+                    //// The GetAsync method also accepts a CancellationToken.
+                    //Console.WriteLine($"NO 1,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                    //HttpResponseMessage response = await client.GetAsync("http://www.linqpad.net");
+                    //var header = response.Headers;
+                    //Console.WriteLine($"NO 2,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                    //response.EnsureSuccessStatusCode();
+                    //string html = await response.Content.ReadAsStringAsync();
+                    //Console.WriteLine($"NO 3,  ThreadID : {Thread.CurrentThread.ManagedThreadId}");
+                    //html.Dump("html");
 
+                }
+                //  uploading Data
+                {
+                    //HTTPCLIENT带参的初始化， 要一个HttpClientHandler 
+                    //var client = new HttpClient(new HttpClientHandler { UseProxy = false });
+                    //var request = new HttpRequestMessage(
+                    //    HttpMethod.Post, "http://www.albahari.com/EchoPost.aspx");
+                    //request.Content = new StringContent("This is a test");
+                    //HttpResponseMessage response = await client.SendAsync(request);
+                    //response.EnsureSuccessStatusCode();
+                    //Console.WriteLine(await response.Content.ReadAsStringAsync());
+                }
+                // Mocking: 在HttpClientHandler上做文章
+                // 这个MockHandler CLASS的构成很有水平，要认真读懂用一个FUNC初始化一个OBJECT
+                // 这里的FUNC, ACTION其实就是一个LOGIC,即告诉我你要如何做这件事，我将这个LOGIC插入CLASS的某个组件中
+                {
+                    ////看懂这个LAMBDA表达式，这里定义一个FUNC,当给一个REQUEST时，如何定制RESPOND
+                    //var mocker = new MockHandler(request =>
+                    //    new HttpResponseMessage(HttpStatusCode.OK)
+                    //    {
+                    //        Content = new StringContent("You asked for " + request.RequestUri)
+                    //    });
+                    ////MOCKER继承了HttpMessageHandler，HttpClient用MOCKER初始化后，将使用它的SendAsync进行回复
+                    ////从而达到模仿的目的
+                    //var client = new HttpClient(mocker);
+                    //var response = await client.GetAsync("http://www.linqpad.net");
+                    //string result = await response.Content.ReadAsStringAsync();
+
+                    //Assert.AreEqual("You asked for http://www.linqpad.net/", result);
+
+                }
+                //TODO: 弄明白这个例子， HANDLER CHAIN的作用
+                //Chaining Handler and DelegatingHandler
+                {
+                    //var mocker = new MockHandler(request =>
+                    //    new HttpResponseMessage(HttpStatusCode.OK)
+                    //    {
+                    //        Content = new StringContent("You asked for " + request.RequestUri)
+                    //    });
+                    ////看懂这里的关系 MOCKER->LOGGER->CLIENT
+                    //var logger = new LoggingHandler(mocker);
+
+                    //var client = new HttpClient(logger);
+                    //var response = await client.GetAsync("http://www.linqpad.net");
+                    //string result = await response.Content.ReadAsStringAsync();
+
+                    //Assert.AreEqual("You asked for http://www.linqpad.net/", result);
+                }
+                //TODO: 无法运行
+                //HttpClient with progress
+                {
+                    //var linqPadProgressBar = new LINQPad.Util.ProgressBar("Download progress");
+
+                    //var progress = new Progress<double>();
+
+                    //progress.ProgressChanged += (sender, value) =>
+                    //    linqPadProgressBar.Percent = (int)value;
+
+                    //var cancellationToken = new CancellationTokenSource();
+
+                    //using var destination = File.OpenWrite("LINQPad6Setup.exe");
+                    //await DownloadFileAsync("https://www.linqpad.net/GetFile.aspx?LINQPad6Setup.exe", destination, progress, default);
+                }
+
+                //Use proxy
+                {
+                    //// 1. WebClient + Proxy
+                    //// Create a WebProxy with the proxy's IP address and port. You can
+                    //// optionally set Credentials if the proxy needs a username/password.
+                    //WebProxy p = new WebProxy("192.178.10.49", 808);
+                    //p.Credentials = new NetworkCredential("username", "password");
+                    //// or:
+                    //p.Credentials = new NetworkCredential("username", "password", "domain");
+                    //WebClient wc = new WebClient();
+                    //wc.Proxy = p;
+                    
+                    //// 2. WebRequest + Proxy
+                    //// Same procedure with a WebRequest object:
+                    //WebRequest req = WebRequest.Create("...");
+                    //req.Proxy = p;
+
+                    //// 3. HttpClient + Proxy
+                    //// To use a proxy with HttpClient, first create an HttpClientHandler, assign its Proxy
+                    //// property, and then feed that into HttpClient’s constructor:
+
+                    //WebProxy pp = new WebProxy("192.178.10.49", 808);
+                    //pp.Credentials = new NetworkCredential("username", "password", "domain");
+                    //var handler = new HttpClientHandler { Proxy = pp };
+                    ////handler.UseProxy = false;  // stop Proxy
+                    //var client = new HttpClient(handler);
+                }
+                //Authentication
+                {
+                    ////WebClient credential
+                    //WebClient wc = new WebClient { Proxy = null };
+                    //wc.BaseAddress = "ftp://ftp.myserver.com";
+                    //// Authenticate, then upload and download a file to the FTP server.
+                    //// The same approach also works for HTTP and HTTPS.
+                    //string username = "myuser";
+                    //string password = "mypassword";
+                    //wc.Credentials = new NetworkCredential(username, password);
+                    //wc.DownloadFile("guestbook.txt", "guestbook.txt");
+                    //string data = "Hello from " + Environment.UserName + "!\r\n";
+                    //File.AppendAllText("guestbook.txt", data);
+                    //wc.UploadFile("guestbook.txt", "guestbook.txt");
+
+                    //// HttpClient credential
+                    //var handler = new HttpClientHandler();
+                    //handler.Credentials = new NetworkCredential(username, password);
+                    //var client = new HttpClient(handler);
+                }
+                //  CredentialCache
+                {
+                    //CredentialCache cache = new CredentialCache();
+                    //Uri prefix = new Uri("http://exchange.somedomain.com");
+                    //cache.Add(prefix, "Digest", new NetworkCredential("joe", "passwd"));
+                    //cache.Add(prefix, "Negotiate", new NetworkCredential("joe", "passwd"));
+                    //WebClient wc = new WebClient();
+                    //wc.Credentials = cache;
+                }
+                // Authenticating via headers with HttpClient
+                {
+                    //var client = new HttpClient();
+                    //client.DefaultRequestHeaders.Authorization =
+                    //    new AuthenticationHeaderValue("Basic",
+                    //        Convert.ToBase64String(Encoding.UTF8.GetBytes("username:password")));
+                }
+                // Exception Handling
+                {
+                    WebClient wc = new WebClient { Proxy = null };
+                    try
+                    {
+                        string s = wc.DownloadString("http://www.albahari.com/notthere");
+                    }
+                    catch (WebException ex)
+                    {
+                        if (ex.Status == WebExceptionStatus.NameResolutionFailure)
+                            Console.WriteLine("Bad domain name");
+                        else if (ex.Status == WebExceptionStatus.ProtocolError)
+                        {
+                            HttpWebResponse response = (HttpWebResponse)ex.Response;
+                            Console.WriteLine(response.StatusDescription);      // "Not Found"
+                            if (response.StatusCode == HttpStatusCode.NotFound)
+                                Console.WriteLine("Not there!");                  // "Not there!"
+                        }
+                        else throw;
+                    }
                 }
             }
 
@@ -166,6 +314,98 @@ namespace Net_5.Networking
 
         //}
 
+        static async Task CopyStreamWithProgressAsync(System.IO.Stream input, System.IO.Stream output, long total, IProgress<double> progress, CancellationToken token)
+        {
+            const int IO_BUFFER_SIZE = 8 * 1024; // Optimal size depends on your scenario
+
+            // Expected size of input stream may be known from an HTTP header when reading from HTTP. Other streams may have their
+            // own protocol for pre-reporting expected size.
+
+            var canReportProgress = total != -1 && progress != null;
+            var totalRead = 0L;
+            byte[] buffer = new byte[IO_BUFFER_SIZE];
+            int read;
+
+            while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            {
+                token.ThrowIfCancellationRequested();
+                await output.WriteAsync(buffer, 0, read);
+                totalRead += read;
+                if (canReportProgress)
+                    progress.Report((totalRead * 1d) / (total * 1d) * 100);
+            }
+        }
+
+        static HttpClient client = new HttpClient();
+        
+        static async Task DownloadFileAsync(string url, System.IO.Stream destination, IProgress<double> progress, CancellationToken token)
+        {
+            var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception(string.Format("The request returned with HTTP status code {0}", response.StatusCode));
+
+            var total = response.Content.Headers.ContentLength.HasValue ? response.Content.Headers.ContentLength.Value : -1L;
+
+            using var source = await response.Content.ReadAsStreamAsync();
+
+            await CopyStreamWithProgressAsync(source, destination, total, progress, token);
+        }
+
 
     }
+
+
+    class MockHandler : HttpMessageHandler
+    {
+        Func<HttpRequestMessage, HttpResponseMessage> _responseGenerator;
+        //看懂这个CLASS,它要用一个FUNC, 叫responseGenerator来初始化
+        //即要给我一个FUNC,告诉我当有一个REQUEST时，如何生成RESPOND
+        //有了这个FUNC,这个CLASS就直接插入SendAsync使用
+        public MockHandler
+            (Func<HttpRequestMessage, HttpResponseMessage> responseGenerator)
+        {
+            _responseGenerator = responseGenerator;
+        }
+        //这里设定一个回复机制，即接到请求后，如果回复
+        //这个MOCKER被用到HTTPCLIENT中，这个CLIENT 就使用这个机制返值
+        protected override Task<HttpResponseMessage> SendAsync
+            (HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var response = _responseGenerator(request);
+            response.RequestMessage = request;
+            return Task.FromResult(response);
+        }
+    }
+
+
+
+    class LoggingHandler : DelegatingHandler
+    {
+        public LoggingHandler(HttpMessageHandler nextHandler)
+        {
+            InnerHandler = nextHandler;//父类DelegatingHandler中的属性，这里把MOCKERHANDLER传进来，作为INNERHANDLER
+        }
+        //这个LOGGINGHANDLER的SNDASYNC的写法与上面不同
+        protected async override Task<HttpResponseMessage> SendAsync
+            (HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            //在父类方法的基础上，加了些内容？
+            Console.WriteLine("Requesting: " + request.RequestUri);
+            var response = await base.SendAsync(request, cancellationToken);//调用父类DelegatingHandler中的SendAsync方法,它会调用INNER HANDLER
+            Console.WriteLine("Got response: " + response.StatusCode);
+            return response;
+        }
+    }
+
+    static class Assert
+    {
+        public static void AreEqual(object o1, object o2)
+        {
+            if (!Equals(o1, o2)) throw new Exception("Objects are not equal");
+        }
+    }
+
+
 }
