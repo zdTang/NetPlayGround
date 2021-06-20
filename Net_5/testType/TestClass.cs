@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Net_5.Type
+namespace Net_5.testType
 {
     class TestClass
     {

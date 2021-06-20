@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Net_5.Type
+namespace Net_5.testType
 {
     class TestInterface
     {

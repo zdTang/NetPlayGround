@@ -19,13 +19,13 @@ namespace Net_5
 
             /*=====TYPE=====*/
             //Net_5.TestAttribute.TestAttribute.Test();
-            //Net_5.Type.TestDynamic.Test();
-            //Net_5.Type.CharString.Test();
-            //Net_5.Type.Tuple.Test();
-            //Net_5.Type.Anonyemous.Test();
+            //Net_5.testType.TestDynamic.Test();
+            //Net_5.testType.CharString.Test();
+            //Net_5.testType.Tuple.Test();
+            //Net_5.testType.Anonyemous.Test();
             //Net_5.Nullable.TestNullable.Test();
-            //Net_5.Type.Utility.Test();
-            //Net_5.Type.TestInterface.Test();
+            //Net_5.testType.Utility.Test();
+            //Net_5.testType.TestInterface.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
@@ -59,7 +59,10 @@ namespace Net_5
 
             /*================ NetWorking =================*/
 
-            Net_5.Networking.Client_side.Test();
+            //Net_5.Networking.Client_side.Test();
+
+            /*================ Reflection =================*/
+            Net_5.TestReflection.ReflectAndActivateType.Test();
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();

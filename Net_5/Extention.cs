@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,16 +12,26 @@ namespace Net_5
     public static class Extention
     {
         // METHOD must be static
-        public static void Dump(this object o,string memo=null)
+        public static void Dump(this object o,object memo=null)
         {
-            if (!String.IsNullOrEmpty(memo))
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            //Type tt = MethodInfo.GetCurrentMethod().GetParameters()[0].ParameterType;//拿到THIS的TYPE
+            switch (memo)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(memo);
-                Console.WriteLine("======");
-            }
+                case string a:
+                  
+                    Console.WriteLine(memo);
+                    break;
+                default:
+                    Console.WriteLine(o.ToString());
+                    break;
+                    
+            } // 对NESTED TYPE需要RECURSION
+
+            Console.WriteLine("=========================");
             Console.ForegroundColor = ConsoleColor.White;
-                // 对NESTED TYPE需要RECURSION
+
             switch (o)
             {
                 case Array a:
@@ -33,6 +44,11 @@ namespace Net_5
                    {
                         Console.WriteLine(s);
                     }
+                    break;
+                case Type t:
+                {
+                    Console.WriteLine(t.FullName);
+                }
                     break;
                 case IEnumerable t:
                     foreach (object item in t)

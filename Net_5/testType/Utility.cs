@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Net_5.Type
+namespace Net_5.testType
 {
     class Utility
     {
