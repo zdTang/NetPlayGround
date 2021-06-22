@@ -63,11 +63,12 @@ namespace Net_5
 
             /*================ Reflection =================*/
             //Net_5.TestReflection.ReflectAndActivateType.Test();
-            Net_5.TestReflection.ReflectingAndInvokingMember.Test();
+            //Net_5.TestReflection.ReflectingAndInvokingMember.Test();
+            Net_5.TestReflection.WorkingWithAttribute.Test();
 
 
             /*================ Delegate =================*/
-            Net_5.TestDelegate.CreateDelegate.Test();
+            //Net_5.TestDelegate.CreateDelegate.Test();
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();

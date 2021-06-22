@@ -182,47 +182,48 @@ namespace Net_5.TestReflection
                 }
                 //  ARRAYS
                 //  STATIC CreateDelegate的源码
-                //  代码有问题
+                //  TODO: 要会用 CreateDelegate，必须要明白DELEGATE 的 TYPE,以及具体的DELEGATE实例
                 {
-                    ///*
-                    // public static Delegate? CreateDelegate(
-                    //      Type type,
-                    //      Type target,
-                    //      string method,
-                    //      bool ignoreCase,
-                    //      bool throwOnBindFailure)
-                    //    {
-                    //      if (type == (Type) null)
-                    //        throw new ArgumentNullException(nameof (type));
-                    //      if (target == (Type) null)
-                    //        throw new ArgumentNullException(nameof (target));
-                    //      if (target.ContainsGenericParameters)
-                    //        throw new ArgumentException(SR.Arg_UnboundGenParam, nameof (target));
-                    //      if (method == null)
-                    //        throw new ArgumentNullException(nameof (method));
-                    //      if (!(type is RuntimeType type1))
-                    //        throw new ArgumentException(SR.Argument_MustBeRuntimeType, nameof (type));
-                    //      if (!(target is RuntimeType methodType))
-                    //        throw new ArgumentException(SR.Argument_MustBeRuntimeType, nameof (target));
-                    //      Delegate delegate1 = type1.IsDelegate() ? (Delegate) Delegate.InternalAlloc(type1) : throw new ArgumentException(SR.Arg_MustBeDelegate, nameof (type));
-                    //      Delegate delegate2 = delegate1;
-                    //      string method1 = method;
-                    //      int num = 5 | (ignoreCase ? 32 : 0);
-                    //      if (delegate2.BindToMethodName((object) null, methodType, method1, (DelegateBindingFlags) num))
-                    //        return delegate1;
-                    //      if (throwOnBindFailure)
-                    //        throw new ArgumentException(SR.Arg_DlgtTargMeth);
-                    //      return (Delegate) null;
-                    //    }
-                    // */
+                    /////*
+                    //// public static Delegate? CreateDelegate(
+                    ////      Type type,
+                    ////      Type target,
+                    ////      string method,
+                    ////      bool ignoreCase,
+                    ////      bool throwOnBindFailure)
+                    ////    {
+                    ////      if (type == (Type) null)
+                    ////        throw new ArgumentNullException(nameof (type));
+                    ////      if (target == (Type) null)
+                    ////        throw new ArgumentNullException(nameof (target));
+                    ////      if (target.ContainsGenericParameters)
+                    ////        throw new ArgumentException(SR.Arg_UnboundGenParam, nameof (target));
+                    ////      if (method == null)
+                    ////        throw new ArgumentNullException(nameof (method));
+                    ////      if (!(type is RuntimeType type1))
+                    ////        throw new ArgumentException(SR.Argument_MustBeRuntimeType, nameof (type));
+                    ////      if (!(target is RuntimeType methodType))
+                    ////        throw new ArgumentException(SR.Argument_MustBeRuntimeType, nameof (target));
+                    ////      Delegate delegate1 = type1.IsDelegate() ? (Delegate) Delegate.InternalAlloc(type1) : throw new ArgumentException(SR.Arg_MustBeDelegate, nameof (type));
+                    ////      Delegate delegate2 = delegate1;
+                    ////      string method1 = method;
+                    ////      int num = 5 | (ignoreCase ? 32 : 0);
+                    ////      if (delegate2.BindToMethodName((object) null, methodType, method1, (DelegateBindingFlags) num))
+                    ////        return delegate1;
+                    ////      if (throwOnBindFailure)
+                    ////        throw new ArgumentException(SR.Arg_DlgtTargMeth);
+                    ////      return (Delegate) null;
+                    ////    }
+                    //// */
 
-                    //CreateDelegate 是DELEGATE的一个STATIC 方法
+                    ////CreateDelegate 是DELEGATE的一个STATIC 方法
+
 
                     //Delegate staticD = Delegate.CreateDelegate
-                    //    (typeof(IntFunc), typeof(Program), "Square");
+                    //    (typeof(IntFunc), typeof(ReflectAndActivateType), "Square");
 
                     //Delegate instanceD = Delegate.CreateDelegate
-                    //    (typeof(IntFunc), new Program(), "Cube");
+                    //    (typeof(IntFunc), new ReflectAndActivateType(), "Cube");
 
                     //Console.WriteLine(staticD.DynamicInvoke(3));      // 9
                     //Console.WriteLine(instanceD.DynamicInvoke(3));    // 27
