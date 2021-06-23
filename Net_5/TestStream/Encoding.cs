@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace IO
+namespace TestStream
 {
     /*
      *All strings in a .NET Framework program are stored as 16-bit Unicode characters. At times you might need to convert from Unicode to some other character encoding, or from some other character encoding to Unicode. The .NET Framework provides several classes for encoding (converting Unicode characters to a block of bytes in another encoding) and decoding (converting a block of bytes in another encoding to Unicode characters.

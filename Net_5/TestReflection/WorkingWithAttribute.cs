@@ -104,16 +104,17 @@ namespace Net_5.TestReflection
             // the metadata for Foo, which then can be reflected at runtime by calling GetCustom
             // Attributes on a Type or MemberInfo object. Reflection and Me
             {
-                //foreach (MethodInfo mi in typeof(Foo).GetMethods())
+                //foreach (MethodInfo mi in typeof(Foo).GetMethods())  //这两种方法都可以取出METHODINFO
+                ////foreach (MethodInfo mi in typeof(Foo).GetTypeInfo().DeclaredMethods)
                 //{
                 //    //注意，ATTRIBUTE有这样一个STATIC 方法 GetCustomAttribute
                 //    //从每一个METHODINFO中取出我提前定义的TESTATTRIBUTE
                 //    TestAttribute att = (TestAttribute)Attribute.GetCustomAttribute(mi, typeof(TestAttribute));
 
-                //    if (att != null)
-                //        Console.WriteLine("Method {0} will be tested; reps={1}; msg={2}",
-                //            mi.Name, att.Repetitions, att.FailureMessage);
-                //}
+                    //    if (att != null)
+                    //        Console.WriteLine("Method {0} will be tested; reps={1}; msg={2}",
+                    //            mi.Name, att.Repetitions, att.FailureMessage);
+                    //}
             }
 
             // unit test example

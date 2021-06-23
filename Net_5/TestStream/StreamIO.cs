@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Net_5.Stream
+namespace Net_5.TestStream
 {
     class StreamIO
     {

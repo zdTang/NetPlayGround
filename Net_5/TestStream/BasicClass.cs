@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace IO
+namespace TestStream
 {
     public class BasicClass
     {

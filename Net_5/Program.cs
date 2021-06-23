@@ -64,11 +64,19 @@ namespace Net_5
             /*================ Reflection =================*/
             //Net_5.TestReflection.ReflectAndActivateType.Test();
             //Net_5.TestReflection.ReflectingAndInvokingMember.Test();
-            Net_5.TestReflection.WorkingWithAttribute.Test();
+            //Net_5.TestReflection.WorkingWithAttribute.Test();
+            //TODO: 有空研究
+            //Net_5.TestReflection.DynamicCodeGeneration.Test();
 
+            //TODO: 有空研究
+            /*================ Dynamic Programming =================*/
+            //Net_5.DynamicProgramming.DynamicProgramming.Test();
 
             /*================ Delegate =================*/
             //Net_5.TestDelegate.CreateDelegate.Test();
+
+            /*================ Serialization =================*/
+            Net_5.Serialization.XMLserializer.Test();
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();

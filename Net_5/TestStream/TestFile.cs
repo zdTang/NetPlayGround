@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace IO
+namespace TestStream
 {
     public class TestFile
     {
