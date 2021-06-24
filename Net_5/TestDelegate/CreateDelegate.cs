@@ -16,7 +16,34 @@ namespace Net_5.TestDelegate
     public delegate void D3();
 
 
+    /*==========================================================内部实现,象一个CLASS
+         .class private auto ansi sealed Transformer
+	        extends [System.Runtime]System.MulticastDelegate // 这是CONSTRUCTOR
+        {
+	        // Methods
+	        .method public hidebysig specialname rtspecialname instance
+             void .ctor ( object 'object',native int 'method') runtime managed 
+	        {
+	        } // end of method Transformer::.ctor
 
+	        .method public hidebysig newslot virtual instance   // Invoke
+            int32 Invoke (int32 x) runtime managed 
+	        {
+	        } // end of method Transformer::Invoke
+
+	        .method public hidebysig newslot 
+            virtual instance class [System.Runtime]System.IAsyncResult BeginInvoke   //BeginInvoke
+                (int32 x,class [System.Runtime]System.AsyncCallback callback,object 'object') runtime managed 
+	        {
+	        } // end of method Transformer::BeginInvoke
+
+	        .method public hidebysig newslot virtual instance int32 EndInvoke        // EndInvoke
+                  (class [System.Runtime]System.IAsyncResult result) runtime managed 
+	        {
+	        } // end of method Transformer::EndInvoke
+
+        } // end of class Transformer
+     =============================================================*/
     class CreateDelegate
     {
         public static void Test()
@@ -134,6 +161,17 @@ namespace Net_5.TestDelegate
             d3();
 
         }
+
+        string Talk(string s)
+        {
+            return s;
+        }
+        // 测试OVERLOADING 两个METHOD有相同的   SIGNATURE, 但是返回值不同，是不可以的
+        //void Talk(string s)
+        //{
+        //    Console.WriteLine(s);
+        //}
+
     }
 
     // A sample class with an instance method and a static method.

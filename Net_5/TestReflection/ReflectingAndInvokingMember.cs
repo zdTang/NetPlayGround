@@ -30,6 +30,16 @@ namespace Net_5.TestReflection
                 //    Console.WriteLine(m);
             }
             #endregion
+            
+            #region Test Dynamic Type
+            {
+
+                /*dynamic dd;
+                Type t = dd.GetType();
+                t.Dump();*/
+
+            }
+            #endregion
 
             #region Declaring Type vs Reflected Type
             {
