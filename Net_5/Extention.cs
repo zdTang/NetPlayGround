@@ -69,7 +69,7 @@ namespace Net_5
                     Console.WriteLine(b ? "true":"false");
                     break;
                 default:
-                    Console.WriteLine(o.ToString());
+                    Console.WriteLine(o?.ToString());
                     break;
 
             }

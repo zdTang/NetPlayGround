@@ -23,9 +23,10 @@ namespace Net_5
             //Net_5.testType.CharString.Test();
             //Net_5.testType.Tuple.Test();
             //Net_5.testType.Anonyemous.Test();
-            //Net_5.Nullable.TestNullable.Test();
+            Net_5.Nullable.TestNullable.Test();
             //Net_5.testType.Utility.Test();
             //Net_5.testType.TestInterface.Test();
+            //Net_5.testType.WhatIsType.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
@@ -65,6 +66,8 @@ namespace Net_5
             //Net_5.TestReflection.ReflectAndActivateType.Test();
             //Net_5.TestReflection.ReflectingAndInvokingMember.Test();
             //Net_5.TestReflection.WorkingWithAttribute.Test();
+            //Net_5.TestReflection.WhatIsType.Test();
+
             //TODO: 有空研究
             //Net_5.TestReflection.DynamicCodeGeneration.Test();
 
@@ -76,7 +79,7 @@ namespace Net_5
             //Net_5.TestDelegate.CreateDelegate.Test();
 
             /*================ Serialization =================*/
-            Net_5.Serialization.XMLserializer.Test();
+            //Net_5.Serialization.XMLserializer.Test();
 
             //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();

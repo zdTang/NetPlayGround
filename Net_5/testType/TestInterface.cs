@@ -88,6 +88,7 @@ namespace Net_5.testType
 
 
     public interface IGrandpa
+
     { void Undo(); }
 
     public interface IDad : IGrandpa

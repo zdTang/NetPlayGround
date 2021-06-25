@@ -55,7 +55,7 @@ namespace Net_5.Concurrent
 
             #endregion
 
-             #region Create Thread test
+            #region Create Thread test
             {
                 ////一种传参是直接传给LAMDA表达式中包的方法，想传几个都可以
                 //Thread a = new Thread(() => { Thread.Sleep(2000); Console.WriteLine(10); }) ;
