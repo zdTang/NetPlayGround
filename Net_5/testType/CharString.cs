@@ -12,16 +12,18 @@ namespace Net_5.testType
         {
             #region Char literal
             {
-                // char literals:
-                char c = 'A';
-                char newLine = '\n';
-                // 理解所谓LITERAL,就是所有的SOURCE CODE写在TEXT上，如何用文字表示出不同的TYPE,''这种格式就表示一个CHAR
-                // 写SOURCE CODE时，以文本形式书写，但这些东西在内存中就变成了立体的东西
-                // System.Char defines a range of static methods for working with characters:
-                Console.WriteLine(char.ToUpper('c'));                                   // C
-                Console.WriteLine(char.IsWhiteSpace('\t'));                             // True
-                Console.WriteLine(char.IsLetter('x'));                                  // True
-                Console.WriteLine(char.GetUnicodeCategory('x'));	                    // LowercaseLetter
+                //// char literals:
+                //char c = 'A';
+                //char newLine = '\n';
+                //// 理解所谓LITERAL,就是所有的SOURCE CODE写在TEXT上，如何用文字表示出不同的TYPE,''这种格式就表示一个CHAR
+                //// 写SOURCE CODE时，以文本形式书写，但这些东西在内存中就变成了立体的东西
+                //// System.Char defines a range of static methods for working with characters:
+                //Console.WriteLine(char.ToUpper('c'));                                   // C
+                //Console.WriteLine(char.IsWhiteSpace('\t'));                             // True
+                //Console.WriteLine(char.IsLetter('x'));                                  // True
+                //Console.WriteLine(char.GetUnicodeCategory('x'));	                    // LowercaseLetter
+                //string name = "Mike";
+                //var a = String.Empty;
             }
             #endregion
 
@@ -210,6 +212,18 @@ namespace Net_5.testType
                 Console.WriteLine(original2);          // 0123456789
                 Console.WriteLine(original3);          // 0123456789
             }
+            #endregion
+
+            #region StringBuilder
+            // 与STRING TYPE相补充
+            // traditional string is immutable
+            // 这样，处理文本的TYPE,就有STRING, STRING BUILDER, CHAR
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("name");
+                string result = sb.ToString();
+            }
+
             #endregion
         }
 

@@ -33,6 +33,12 @@ namespace Net_5.testType
 
             t.Dump();
             i.Dump();
+
+            //关于ENUM这个CLASS,用来提供各种处理ENUM TYPE的STATIC 方法
+            //Enum.GetName();
+            Animal a = Animal.Cat;
+            Type aa = typeof(Animal);
+            Type bb = typeof(Enum);
         }
     }
 
@@ -43,6 +49,24 @@ namespace Net_5.testType
     }
 
     class MyTool : ITool
+    {
+        void Test()
+        {
+            //Enum.GetName();
+            Animal a = Animal.Cat;
+            Type aa = typeof(Animal);
+            Type bb = typeof(Enum);
+        }
+    }
+
+    enum Animal
+    {
+        Cat,
+        Dog,
+        Lion
+    }
+
+    class Pet 
     {
 
     }

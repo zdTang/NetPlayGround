@@ -13,144 +13,144 @@ namespace Net_5.Comparison
         {
             #region Comparison 比较两个值是否相同——VALUE TYPE REFERENCE TYPE
             {
-                // Simple value equality:
-                int x = 5, y = 5;
-                Console.WriteLine(x == y);   // True (by virtue of value equality)
+                //// Simple value equality:
+                //int x = 5, y = 5;
+                //Console.WriteLine(x == y);   // True (by virtue of value equality)
 
-                // A more elaborate demonstration of value equality:
-                var dt1 = new DateTimeOffset(2010, 1, 1, 1, 1, 1, TimeSpan.FromHours(8));
-                var dt2 = new DateTimeOffset(2010, 1, 1, 2, 1, 1, TimeSpan.FromHours(9));
-                Console.WriteLine(dt1 == dt2);   // True (same point in time)
+                //// A more elaborate demonstration of value equality:
+                //var dt1 = new DateTimeOffset(2010, 1, 1, 1, 1, 1, TimeSpan.FromHours(8));
+                //var dt2 = new DateTimeOffset(2010, 1, 1, 2, 1, 1, TimeSpan.FromHours(9));
+                //Console.WriteLine(dt1 == dt2);   // True (same point in time)
 
-                // Referential equality:
-                Foo f1 = new Foo { X = 5 };
-                Foo f2 = new Foo { X = 5 };
-                Console.WriteLine(f1 == f2);   // False (different objects)
+                //// Referential equality:
+                //Foo f1 = new Foo { X = 5 };
+                //Foo f2 = new Foo { X = 5 };
+                //Console.WriteLine(f1 == f2);   // False (different objects)
                
 
 
-                var result =f1.Equals(f2);      // 查看源码，发现OBJECT的EQUALS中用的是==判断，这个需要OVERRIDE才能对某一个CLASS适用
+                //var result =f1.Equals(f2);      // 查看源码，发现OBJECT的EQUALS中用的是==判断，这个需要OVERRIDE才能对某一个CLASS适用
 
-                #region Object Equals SourceCode 
-                //在5.0源码中发现一个参数的EQUALS最后调用的也是这个STATIC 版
-                {
-                    // System.Object
-                    /*
-                     public static bool Equals(object? objA, object? objB)
-                    {
-                        if (objA == objB)
-                        {
-                            return true;
-                        }
-                        if (objA == null || objB == null)
-                        {
-                            return false;
-                        }
-                        return objA!.Equals(objB);
-                    }
+                //#region Object Equals SourceCode 
+                ////在5.0源码中发现一个参数的EQUALS最后调用的也是这个STATIC 版
+                //{
+                //    // System.Object
+                //    /*
+                //     public static bool Equals(object? objA, object? objB)
+                //    {
+                //        if (objA == objB)
+                //        {
+                //            return true;
+                //        }
+                //        if (objA == null || objB == null)
+                //        {
+                //            return false;
+                //        }
+                //        return objA!.Equals(objB);
+                //    }
 
-                   */
-                }
+                //   */
+                //}
 
-                #endregion
-                Foo f3 = f1;
-                Console.WriteLine(f1 == f3);   // True (same objects)
+                //#endregion
+                //Foo f3 = f1;
+                //Console.WriteLine(f1 == f3);   // True (same objects)
 
-                // Customizing classes to exhibit value equality:
-                Uri uri1 = new Uri("http://www.linqpad.net");
-                Uri uri2 = new Uri("http://www.linqpad.net");
-                Console.WriteLine(uri1 == uri2); // True
-                // 这个==被OVERLOAD了，重写过程中又引用了uri的EQUALS方法（这个方法极其复杂，比较一些VALUE细节）
+                //// Customizing classes to exhibit value equality:
+                //Uri uri1 = new Uri("http://www.linqpad.net");
+                //Uri uri2 = new Uri("http://www.linqpad.net");
+                //Console.WriteLine(uri1 == uri2); // True
+                //// 这个==被OVERLOAD了，重写过程中又引用了uri的EQUALS方法（这个方法极其复杂，比较一些VALUE细节）
 
-                #region == has been overriden [Source Code]
-                /*
-                    public static bool operator ==(Uri? uri1, Uri? uri2)
-                    {
-                      if ((object) uri1 == (object) uri2)
-                        return true;
-                      return (object) uri1 != null && (object) uri2 != null && uri1.Equals((object) uri2);
-                    }
+                //#region == has been overriden [Source Code]
+                ///*
+                //    public static bool operator ==(Uri? uri1, Uri? uri2)
+                //    {
+                //      if ((object) uri1 == (object) uri2)
+                //        return true;
+                //      return (object) uri1 != null && (object) uri2 != null && uri1.Equals((object) uri2);
+                //    }
 
-                    public static bool operator !=(Uri? uri1, Uri? uri2)
-                    {
-                      if ((object) uri1 == (object) uri2)
-                        return false;
-                      return (object) uri1 == null || (object) uri2 == null || !uri1.Equals((object) uri2);
-                    }
-                                 *
-                 */
+                //    public static bool operator !=(Uri? uri1, Uri? uri2)
+                //    {
+                //      if ((object) uri1 == (object) uri2)
+                //        return false;
+                //      return (object) uri1 == null || (object) uri2 == null || !uri1.Equals((object) uri2);
+                //    }
+                //                 *
+                // */
 
-                #endregion
+                //#endregion
 
             }
             #endregion
 
             #region Value and Reference
             {
-                {
-                    int x = 5;
-                    int y = 5;
-                    Console.WriteLine(x == y);      // True
-                }
-                {
-                    object x = 5;
-                    object y = 5;
-                    Console.WriteLine(x == y);      // False  引用类型==比的是引用地址
-                }
+                //{
+                //    int x = 5;
+                //    int y = 5;
+                //    Console.WriteLine(x == y);      // True
+                //}
+                //{
+                //    object x = 5;
+                //    object y = 5;
+                //    Console.WriteLine(x == y);      // False  引用类型==比的是引用地址，不重写的话，引用类型只要地址不同，都是不等的
+                //}
 
             }
             #endregion
 
             #region Leverage OBJECT'S Virtual Equal()
             {
-                //这里要理解虽然用的OBJECT,但本质上X,Y都是VALUE.因而比较的是VALUE
-                // Here's an example of how we can leverage the virtual Equals mehtod:
-                object x = 5; // 这里的X,Y只是戴上帽子而已
-                object y = 5;
-                //这里需要理解，==是STATIC的，在COMPILE时期, Compiler就会根据X,Y的类型，决定是值比较还是引用比较，因而这里决定进行REFERENTIAL COMPARISON
-                var result = (x == y);
-                // 用EQUALS这个方法可以避免上述问题，它在RUNTIME期间，将OBJECT转化为具体的类型，这就避免了==，或！=静态的根据帽子决定比较方式的情况
-                Console.WriteLine(x.Equals(y));      // True
-                /*   虽然这里X,Y是OBJECT，但到了RUNTIME,都会被转为INT32
-                这里涉及对EQUALS在RUNTIME时动作的理解，下列来自BOOK, NUTSHELL
-                Equals is resolved at runtime—according to the object’s actual type. 
-                In this case, it calls Int32’s Equals method,
-                1, which applies value equality to the operands, returning true.
-                2, With reference types, Equals performs referential equality comparison by default;
-                3, with structs, Equals performs structural comparison by calling Equals on each of its fields
-                //这里是否可以理解，EQUALS本质上就是==，只是在RUNTIME时期根据TYPE类型而决定的==，RUNTIME时根据TYPE，调用TYPE它自已的==
-                //而不是象==在COMPILE时期就根据TYPE（很可能只是BOXING了一个帽子）绑定了==，这时很可能绑定的是错的。
-                 *
-                 */
+                ////这里要理解虽然用的OBJECT,但本质上X,Y都是VALUE.因而比较的是VALUE
+                //// Here's an example of how we can leverage the virtual Equals mehtod:
+                //object x = 5; // 这里的X,Y只是戴上帽子而已
+                //object y = 5;
+                ////这里需要理解，==是STATIC的，在COMPILE时期, Compiler就会根据X,Y的类型，决定是值比较还是引用比较，因而这里决定进行REFERENTIAL COMPARISON
+                //var result = (x == y);
+                //// 用EQUALS这个方法可以避免上述问题，它在RUNTIME期间，将OBJECT转化为具体的类型，这就避免了==，或！=静态的根据帽子决定比较方式的情况
+                //Console.WriteLine(x.Equals(y));      // True
+                ///*   虽然这里X,Y是OBJECT，但到了RUNTIME,都会被转为INT32
+                //这里涉及对EQUALS在RUNTIME时动作的理解，下列来自BOOK, NUTSHELL
+                //Equals is resolved at runtime—according to the object’s actual type. 
+                //In this case, it calls Int32’s Equals method,
+                //1, which applies value equality to the operands, returning true.
+                //2, With reference types, Equals performs referential equality comparison by default;
+                //3, with structs, Equals performs structural comparison by calling Equals on each of its fields
+                ////这里是否可以理解，EQUALS本质上就是==，只是在RUNTIME时期根据TYPE类型而决定的==，RUNTIME时根据TYPE，调用TYPE它自已的==
+                ////而不是象==在COMPILE时期就根据TYPE（很可能只是BOXING了一个帽子）绑定了==，这时很可能绑定的是错的。
+                // *
+                // */
 
-                Console.WriteLine(AreEqual(x, y));    // True
+                //Console.WriteLine(AreEqual(x, y));    // True
 
-                Console.WriteLine(AreEqual(null, null));    // True
+                //Console.WriteLine(AreEqual(null, null));    // True
 
-                // 利用EQUALS的例子，写法很清致，可以避免NULL EXCEPTION
-                // 这个例子可以直接抄着用
-                bool AreEqual(object obj1, object obj2)
-                {
-                    if (obj1 == null) return obj2 == null;
-                    return obj1.Equals(obj2);
-                    // What we've written is in fact equivalent to the static object.Equals method!
-                }
-                //或写成这样
-                static bool AreEqualTwo(object obj1, object obj2)
-                    => obj1 == null ? obj2 == null : obj1.Equals(obj2);
+                //// 利用EQUALS的例子，写法很清致，可以避免NULL EXCEPTION
+                //// 这个例子可以直接抄着用
+                //bool AreEqual(object obj1, object obj2)
+                //{
+                //    if (obj1 == null) return obj2 == null;
+                //    return obj1.Equals(obj2);
+                //    // What we've written is in fact equivalent to the static object.Equals method!
+                //}
+                ////或写成这样
+                //static bool AreEqualTwo(object obj1, object obj2)
+                //    => obj1 == null ? obj2 == null : obj1.Equals(obj2);
             }
             #endregion
 
             #region  利用好OBJECT的STATIC EQUALS,这个自带NULL验证
             {
-                // OBJECT自带两个EQUALS, 一个是VIRTUAL,可用来被重写，另一个是STATIC的，要两个参数
-                // Here's how we can use object.Equals:
-                object x = 3, y = 3;
-                Console.WriteLine(object.Equals(x, y));   // True
-                x = null;
-                Console.WriteLine(object.Equals(x, y));   // False
-                y = null;
-                Console.WriteLine(object.Equals(x, y));   // True
+                //// OBJECT自带两个EQUALS, 一个是VIRTUAL,可用来被重写，另一个是STATIC的，要两个参数
+                //// Here's how we can use object.Equals:
+                //object x = 3, y = 3;
+                //Console.WriteLine(object.Equals(x, y));   // True
+                //x = null;
+                //Console.WriteLine(object.Equals(x, y));   // False
+                //y = null;
+                //Console.WriteLine(object.Equals(x, y));   // True
 
                 #region static Equals 源码
                 //在RUNTIME时还是会转换为真实的TYPE进行验证，调用该TYPE独有的比较方式，
@@ -175,9 +175,9 @@ namespace Net_5.Comparison
             //此时用这个方法可以获得真实结果
 
             {
-                Widget w1 = new Widget();
-                Widget w2 = new Widget();
-                Console.WriteLine(object.ReferenceEquals(w1, w2));     // False
+                //Widget w1 = new Widget();
+                //Widget w2 = new Widget();
+                //Console.WriteLine(object.ReferenceEquals(w1, w2));     // False
             }
 
             #endregion
@@ -185,8 +185,8 @@ namespace Net_5.Comparison
             #region Interface
 
             {
-                //看明白这个CLASS的写法
-                new TestNewOne<int>().IsEqual(3, 3);
+                ////看明白这个CLASS的写法
+                //new TestNewOne<int>().IsEqual(3, 3);
             }
 
             #endregion
@@ -194,16 +194,16 @@ namespace Net_5.Comparison
             #region Equals and ==
 
             {
-                // With value types, it's quite rare:
-                double x = double.NaN;
-                Console.WriteLine(x == x);            // False
-                Console.WriteLine(x.Equals(x));      // True
+                //// With value types, it's quite rare:
+                //double x = double.NaN;
+                //Console.WriteLine(x == x);            // False
+                //Console.WriteLine(x.Equals(x));      // True
 
-                // With reference types, it's more common:
-                var sb1 = new StringBuilder("foo");
-                var sb2 = new StringBuilder("foo");
-                Console.WriteLine(sb1 == sb2);          // False (referential equality)
-                Console.WriteLine(sb1.Equals(sb2));     // True  (value equality)
+                //// With reference types, it's more common:
+                //var sb1 = new StringBuilder("foo");
+                //var sb2 = new StringBuilder("foo");
+                //Console.WriteLine(sb1 == sb2);          // False (referential equality)
+                //Console.WriteLine(sb1.Equals(sb2));     // True  (value equality)
 
                 #region StringBuilder的Equals被重写
 
@@ -254,11 +254,11 @@ namespace Net_5.Comparison
             #region Equality and Cumstom Types
 
             {
-                //仔细看示列，涉及STRUCT的继承，定义，==符号重载
-                Area a1 = new Area(5, 10);
-                Area a2 = new Area(10, 5);
-                Console.WriteLine(a1.Equals(a2));    // True
-                Console.WriteLine(a1 == a2);          // True
+                ////仔细看示列，涉及STRUCT的继承，定义，==符号重载
+                //Area a1 = new Area(5, 10);
+                //Area a2 = new Area(10, 5);
+                //Console.WriteLine(a1.Equals(a2));    // True
+                //Console.WriteLine(a1 == a2);          // True
             }
 
             #endregion
@@ -266,22 +266,22 @@ namespace Net_5.Comparison
             #region Test
 
             {
-                var a = new Foo();
-                var b = new Foo();
-                (a == b).Dump("==");
-                object.Equals(a, b).Dump("Equals");
+                //var a = new Foo();
+                //var b = new Foo();
+                //(a == b).Dump("==");
+                //object.Equals(a, b).Dump("Equals");
                
-                // 实现了IEquatable<NewFoo>接口，注意看例子，实现接口与OBJECT的原EQUAL不冲突
-                var aa = new NewFoo();
-                var bb = new NewFoo();
-                (aa == bb).Dump("==");         //FALSE
-                aa.Equals(bb).Dump("Self Equals");  //TRUE  // NewFoo实现了IEquatable<NewFoo>接口
-                Object.Equals(aa, bb).Dump("Object static");      // fALSE
+                //// 实现了IEquatable<NewFoo>接口，注意看例子，实现接口与OBJECT的原EQUAL不冲突
+                //var aa = new NewFoo();
+                //var bb = new NewFoo();
+                //(aa == bb).Dump("==");         //FALSE
+                //aa.Equals(bb).Dump("Self Equals");  //TRUE  // NewFoo实现了IEquatable<NewFoo>接口
+                //Object.Equals(aa, bb).Dump("Object static");      // fALSE
                
-                // 用OBJECT的VISION去调
-                object aaa = new NewFoo();
-                object bbb = new NewFoo();
-                (aaa.Equals(bbb)).Dump("Use object's Vision");
+                //// 用OBJECT的VISION去调
+                //object aaa = new NewFoo();
+                //object bbb = new NewFoo();
+                //(aaa.Equals(bbb)).Dump("Use object's Vision");
 
             }
 
