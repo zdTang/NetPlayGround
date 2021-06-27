@@ -28,6 +28,8 @@ namespace Net_5
             //Net_5.testType.TestInterface.Test();
             //Net_5.testType.WhatIsType.Test();
             //Net_5.testType.TestClass.Test();
+            //Net_5.testType.BasicTypes.Test();
+            Net_5.testType.TestString.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
@@ -82,7 +84,7 @@ namespace Net_5
             /*================ Serialization =================*/
             //Net_5.Serialization.XMLserializer.Test();
 
-            Net_5.Comparison.EqualityComparison.Test();
+            //Net_5.Comparison.EqualityComparison.Test();
             //Net_5.Comparison.OrderComparison.Test();
             //TestTryCatch.Test();
             //Net_5.Linq.TestLinq.Test();
