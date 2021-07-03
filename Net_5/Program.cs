@@ -34,7 +34,7 @@ namespace Net_5
             //Net_5.testType.BasicTypes.Test();
             //Net_5.testType.TestString.Test();
             //Net_5.testType.ImplicitlyTypedLocalVars.Test();
-            Net_5.testType.FunWithArray.Test();
+            //Net_5.testType.FunWithArray.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
@@ -51,7 +51,7 @@ namespace Net_5
 
             /*================Concurrency=================*/
             //Net_5.Concurrent.Multithreading.Test();
-            //Net_5.Concurrent.TestTask.Test();
+            Net_5.Concurrent.TestTask.Test();
             //Net_5.Concurrent.TestAwaiter.Test();
             //Net_5.Concurrent.PrinciplesOfAsynchrony.Test();
             //Net_5.Concurrent.Asynchronous_Version_5.Test();
