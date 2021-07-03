@@ -16,6 +16,9 @@ namespace Net_5
             //var fileListener = new TextWriterTraceListener("D:\\trace.txt");
             //Trace.Listeners.Add(fileListener);
 
+            /*=======Syntax=======*/
+            //Net_5.Syntax.TestIterationAndDecision.Test();      // 各种LOOP和IF-ELSE IF
+            //Net_5.Syntax.Pattern.Test();                       // 各种SWITCH, PATTERN
 
             /*=====TYPE=====*/
             //Net_5.TestAttribute.TestAttribute.Test();
@@ -29,7 +32,9 @@ namespace Net_5
             //Net_5.testType.WhatIsType.Test();
             //Net_5.testType.TestClass.Test();
             //Net_5.testType.BasicTypes.Test();
-            Net_5.testType.TestString.Test();
+            //Net_5.testType.TestString.Test();
+            //Net_5.testType.ImplicitlyTypedLocalVars.Test();
+            Net_5.testType.FunWithArray.Test();
 
             /*====COLLECTION=====*/
             //Enumerator.Test();
