@@ -16,29 +16,35 @@ namespace Net_5.testType
         // 只不过TYPE是个内定的CLASS
         public static void Test()
         {
-            Type t = typeof(MyTool);     // mytool 是个用关键字CLASS定义的TYPE
-            Type i = typeof(ITool);      // ITool  是个用关键字INTERFACE定义的TYPE
-            Type type = typeof(Type);    // TYPE   是个用关键字CLASS定义的TYPE
-            //Type d = typeof(delegate); // delegate小定的，是关键字，不是个TYPE,它用定义TYPE
+            //Type t = typeof(MyTool);     // mytool 是个用关键字CLASS定义的TYPE
+            //Type i = typeof(ITool);      // ITool  是个用关键字INTERFACE定义的TYPE
+            //Type type = typeof(Type);    // TYPE   是个用关键字CLASS定义的TYPE
+            ////Type d = typeof(delegate); // delegate小定的，是关键字，不是个TYPE,它用定义TYPE
             
-            Type e = typeof(EatWord);   // 这是一个TYPE
-            Type d = typeof(Delegate);   // 大写的Delegate 是个TYPE
-            Type action = typeof(Action);   // 这是一个TYPE
-            Type func = typeof(Func<>);   // 这是一个TYPE
+            //Type e = typeof(EatWord);   // 这是一个TYPE
+            //Type d = typeof(Delegate);   // 大写的Delegate 是个TYPE
+            //Type action = typeof(Action);   // 这是一个TYPE
+            //Type func = typeof(Func<>);   // 这是一个TYPE
 
 
-            //anonymous Type
-            var v = new { Amount = 108, Message = "Hello" };
-            Type ano = v.GetType();
+            ////anonymous Type
+            //var v = new { Amount = 108, Message = "Hello" };
+            //Type ano = v.GetType();
 
-            t.Dump();
-            i.Dump();
+            //t.Dump();
+            //i.Dump();
 
-            //关于ENUM这个CLASS,用来提供各种处理ENUM TYPE的STATIC 方法
-            //Enum.GetName();
-            Animal a = Animal.Cat;
-            Type aa = typeof(Animal);
-            Type bb = typeof(Enum);
+            ////关于ENUM这个CLASS,用来提供各种处理ENUM TYPE的STATIC 方法
+            ////Enum.GetName();
+            //Animal a = Animal.Cat;
+            //Type aa = typeof(Animal);
+            //Type bb = typeof(Enum);
+
+            //var a = new Object();
+            ////a instanceof Object;
+            //// java, javascript has instanceof ,  while C# HAS  
+            //// for c# we can use the following statement
+            ////if (c.GetType() == typeof(TForm))
         }
     }
 

@@ -7,18 +7,27 @@ namespace Net_5.testType
     {
        public  static void Test()
         {
-            Console.WriteLine("***** Fun with Strings *****\n");
-            BasicStringFunctionality();
-            StringConcatenation();
-            StringInterpolation();
-            EscapeChars();
-            VerbatimStrings();
-            StringEquality();
-            StringEqualitySpecifyingCompareRules();
-            StringsAreImmutable();
-            StringsAreImmutable2();
-            FunWithStringBuilder();
-            Console.ReadLine();
+            //Console.WriteLine("***** Fun with Strings *****\n");
+            //BasicStringFunctionality();
+            //StringConcatenation();
+            //StringInterpolation();
+            //EscapeChars();
+            //VerbatimStrings();
+            //StringEquality();
+            //StringEqualitySpecifyingCompareRules();
+            //StringsAreImmutable();
+            //StringsAreImmutable2();
+            //FunWithStringBuilder();
+            //Console.ReadLine();
+            string a = "mike";
+            string b = "mike";
+            
+            Console.WriteLine(a == b);      //  TRUE
+            object o = new object();
+            object oo = new object();
+            Console.WriteLine(o == oo);     //false
+
+
         }
         #region String basics
         static void BasicStringFunctionality()
