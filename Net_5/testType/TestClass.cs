@@ -7,18 +7,28 @@ namespace Net_5.testType
     {
         public static void Test()
         {
-            string a = "mike";
-            string b = "mike";
-            Console.WriteLine(a==b);    // true
+            //string a = "mike";
+            //string b = "mike";
+            //Console.WriteLine(a==b);    // true
 
-            //两个空对象也不相等
-            //这应该是默认的比较方法
-            //对于一个具体的OBJECT, 我们要OVERRIDE 这个EQUALS方法，才能定义自己的规则来比较
-            //否则对于OJBECT这样比较，是不相等的
-            object obj1 = new object();
-            object obj2 = new object();
-            Console.WriteLine(obj1 == obj2); //false
-            Console.WriteLine(obj1.Equals(obj2)); //OJBECT的EQUALS 就是==
+            ////两个空对象也不相等
+            ////这应该是默认的比较方法
+            ////对于一个具体的OBJECT, 我们要OVERRIDE 这个EQUALS方法，才能定义自己的规则来比较
+            ////否则对于OJBECT这样比较，是不相等的
+            //object obj1 = new object();
+            //object obj2 = new object();
+            //Console.WriteLine(obj1 == obj2); //false
+            //Console.WriteLine(obj1.Equals(obj2)); //OJBECT的EQUALS 就是==
+
+           
+            
+            // test "this" in Constructor
+            // Create oject of Geek class
+            Geek obj = new Geek(2);
+            // will out put two lines
+
+
+
         }
 
     }
@@ -66,5 +76,34 @@ namespace Net_5.testType
     //  DELEGATE
 
     delegate void MyDelegate(int a);  // 这是定义一个TYPE
+
+
+    // C# program to illustrate how to invoke
+// overloaded constructor using this keyword
+
+class Geek
+    {
+
+        // Constructor without parameter
+        public Geek()
+        {
+            Console.WriteLine("Hello! Constructor 1");
+        }
+
+        // Constructor with parameter
+        // Here this keyword is used 
+        // to call Geek constructor
+        public Geek(int a)
+        : this()
+        {
+            Console.WriteLine("Hello! Constructor 2");
+        }
+    }
+
+
+//    Output:
+
+//Hello! Constructor 1
+//Hello! Constructor 2
    
 }
