@@ -30,12 +30,12 @@ namespace Net_5
             //Net_5.testType.Utility.Test();
             //Net_5.testType.TestInterface.Test();
             //Net_5.testType.WhatIsType.Test();
-            Net_5.testType.TestClass.Test();
+            //Net_5.testType.TestClass.Test();
             //Net_5.testType.BasicTypes.Test();
             //Net_5.testType.TestString.Test();
             //Net_5.testType.ImplicitlyTypedLocalVars.Test();
             //Net_5.testType.FunWithArray.Test();
-
+            Net_5.testType.TestDateTime.Test();
             /*====COLLECTION=====*/
             //Enumerator.Test();
             //DrillOnEnumerable.Test();

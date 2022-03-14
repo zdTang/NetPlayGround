@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using LINQPad;
+//using LINQPad;
 
 namespace Net_5.TestReflection
 {
@@ -19,7 +19,8 @@ namespace Net_5.TestReflection
 
         public static void Test()
         {
-            #region EmmittingAssembliesAndTypes
+            #region
+           // EmmittingAssembliesAndTypes
 
             {
                 // what is Assembly:
@@ -102,7 +103,7 @@ namespace Net_5.TestReflection
                 Console.WriteLine(x);   // 3.16227766016838
 
                 // LINQPad can disassemble methods for you:
-                tb.GetMethod("SquareRoot").Disassemble().Dump("LINQPad disassembly");
+                //tb.GetMethod("SquareRoot").Disassemble().Dump("LINQPad disassembly");
             }
 
             #endregion
