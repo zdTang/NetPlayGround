@@ -35,7 +35,11 @@ namespace Net_5
             //Net_5.testType.TestString.Test();
             //Net_5.testType.ImplicitlyTypedLocalVars.Test();
             //Net_5.testType.FunWithArray.Test();
-            Net_5.testType.TestDateTime.Test();
+            //Net_5.testType.TestDateTime.Test();   // also TimeSpan
+            /* ===SEED===== */
+            TestSeeding.Seed.Test();
+            Console.WriteLine("ok");
+            
             /*====COLLECTION=====*/
             //Enumerator.Test();
             //DrillOnEnumerable.Test();
