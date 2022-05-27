@@ -12,6 +12,9 @@ namespace Net_5
         {
             Console.WriteLine($"IN  Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
             /*======加一个LOGGER====*/
+            
+            
+            Net_5.Basic.TestDateTime.Test();
             //Trace.Listeners.Clear();//CLEAR THE DEFAULT LISTENERS
             //var fileListener = new TextWriterTraceListener("D:\\trace.txt");
             //Trace.Listeners.Add(fileListener);
@@ -37,8 +40,8 @@ namespace Net_5
             //Net_5.testType.FunWithArray.Test();
             //Net_5.testType.TestDateTime.Test();   // also TimeSpan
             /* ===SEED===== */
-            TestSeeding.Seed.Test();
-            Console.WriteLine("ok");
+            //TestSeeding.Seed.Test();
+            //Console.WriteLine("ok");
             
             /*====COLLECTION=====*/
             //Enumerator.Test();

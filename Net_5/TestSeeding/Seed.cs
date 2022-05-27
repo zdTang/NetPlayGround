@@ -68,7 +68,7 @@ namespace Net_5.TestSeeding
                     CustomerId = userId, // Mike added
                     CreatedDate = new DateTime(date.Item1, date.Item2, date.Item3), // Mike added
                     ReportID = i,
-                    ArticleName = CreateString(20),
+                    ArticleName = $"ArticleName--{i}",
 
                     //May provide article id?
                     NumViews = rd.Next(50),
