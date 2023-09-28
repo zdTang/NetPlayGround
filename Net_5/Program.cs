@@ -12,9 +12,9 @@ namespace Net_5
         {
             Console.WriteLine($"IN  Main() ===ThreadID = {Thread.CurrentThread.ManagedThreadId}");
             /*======加一个LOGGER====*/
-            
-            
-            Net_5.Basic.TestDateTime.Test();
+
+
+            //Net_5.Basic.TestDateTime.Test();
             //Trace.Listeners.Clear();//CLEAR THE DEFAULT LISTENERS
             //var fileListener = new TextWriterTraceListener("D:\\trace.txt");
             //Trace.Listeners.Add(fileListener);
@@ -24,6 +24,7 @@ namespace Net_5
             //Net_5.Syntax.Pattern.Test();                       // 各种SWITCH, PATTERN
 
             /*=====TYPE=====*/
+            Net_5.TestObject.TestObject.Test();
             //Net_5.TestAttribute.TestAttribute.Test();
             //Net_5.testType.TestDynamic.Test();
             //Net_5.testType.CharString.Test();
@@ -42,7 +43,7 @@ namespace Net_5
             /* ===SEED===== */
             //TestSeeding.Seed.Test();
             //Console.WriteLine("ok");
-            
+
             /*====COLLECTION=====*/
             //Enumerator.Test();
             //DrillOnEnumerable.Test();
